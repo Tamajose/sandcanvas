@@ -10,6 +10,7 @@ export class SandSystem {
 
     this.positions = [];
     this.colors = [];
+    this.velocities = [];
 
     this.points = new THREE.Points(this.geometry, this.material);
     this.points.frustumCulled = false;
@@ -20,7 +21,21 @@ export class SandSystem {
     console.log("Adding particle at", x, y);
     this.positions.push(x, y, 0);
     this.colors.push(color.r, color.g, color.b);
+    this.velocities.push(0, 0, 0);
     this.update();
+  }
+
+  updatePhysics() {
+    const gravity = -0.005;
+
+    for (let i = 0; i < this.positions.length; i += 3) {
+      this.velocities[i + 1] += gravity;
+      this.positions[i + 1] += this.velocities[i + 1];
+      if (this.positions[i + 1] < -1) {
+        this.positions[i + 1] = -1;
+        this.velocities[i + 1] = 0;
+      }
+    }
   }
 
   update() {

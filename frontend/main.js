@@ -17,4 +17,4 @@ canvas.addEventListener("click", (event) => {
   sandSystem.addParticle(x, y, { r: 1, g: 0, b: 0 });
 });
 
-startLoop(scene, camera, renderer);
+startLoop(scene, camera, renderer, sandSystem);

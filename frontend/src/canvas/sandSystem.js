@@ -4,13 +4,18 @@ export class SandSystem {
   constructor(scene) {
     this.geometry = new THREE.BufferGeometry();
     this.material = new THREE.PointsMaterial({
-      size: 0.1,
+      size: 5,
       vertexColors: true,
     });
 
     this.positions = [];
     this.colors = [];
     this.velocities = [];
+
+    this.gridSize = 200;
+    this.grid = Array(this.gridSize)
+      .fill(0)
+      .map(() => Array(this.gridSize).fill(false));
 
     this.points = new THREE.Points(this.geometry, this.material);
     this.points.frustumCulled = false;
@@ -25,16 +30,59 @@ export class SandSystem {
     this.update();
   }
 
+  worldToGrid(x, y) {
+    const i = Math.floor(((x + 1) / 2) * (this.gridSize - 1));
+    const j = Math.floor(((y + 1) / 2) * (this.gridSize - 1));
+    return [i, j];
+  }
+
+  gridToWorld(i, j) {
+    const x = (i / (this.gridSize - 1)) * 2 - 1;
+    const y = (j / (this.gridSize - 1)) * 2 - 1;
+    return [x, y];
+  }
+
   updatePhysics() {
     const gravity = -0.005;
 
-    for (let i = 0; i < this.positions.length; i += 3) {
-      this.velocities[i + 1] += gravity;
-      this.positions[i + 1] += this.velocities[i + 1];
-      if (this.positions[i + 1] < -1) {
-        this.positions[i + 1] = -1;
-        this.velocities[i + 1] = 0;
+    for (let p = 0; p < this.positions.length; p += 3) {
+      const gravity = 0.01;
+
+      let x = this.positions[p];
+      let y = this.positions[p + 1];
+
+      let [i, j] = this.worldToGrid(x, y);
+
+      if (j <= 0) {
+        y = -1;
+        this.grid[i][0] = true;
+        this.positions[p + 1] = y;
+        continue;
       }
+
+      if (j > 0 && !this.grid[i][j - 1]) {
+        y -= gravity;
+        j -= 1;
+      } else {
+        let moved = false;
+        if (i > 0 && !this.grid[i - 1][j - 1]) {
+          i -= 1;
+          j -= 1;
+          y -= gravity;
+          moved = true;
+        } else if (i < this.gridSize - 1 && !this.grid[i + 1][j - 1]) {
+          i += 1;
+          j -= 1;
+          y -= gravity;
+          moved = true;
+        }
+        if (!moved) {
+          this.grid[i][j] = true;
+          continue;
+        }
+      }
+      this.positions[p] = x;
+      this.positions[p + 1] = y;
     }
   }
 

@@ -8,6 +8,10 @@ const { scene, camera, renderer } = initScene(canvas);
 
 const sandSystem = new SandSystem(scene);
 
+let isPouring = false;
+let mouseX = 0;
+let mouseY = 0;
+
 canvas.addEventListener("click", (event) => {
   const rect = canvas.getBoundingClientRect();
 

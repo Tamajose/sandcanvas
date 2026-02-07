@@ -4,13 +4,12 @@ export class SandSystem {
   constructor(scene) {
     this.geometry = new THREE.BufferGeometry();
     this.material = new THREE.PointsMaterial({
-      size: 5,
+      size: 2 / this.gridSize,
       vertexColors: true,
     });
 
     this.positions = [];
     this.colors = [];
-    this.velocities = [];
 
     this.gridSize = 200;
     this.grid = Array(this.gridSize)
@@ -26,7 +25,6 @@ export class SandSystem {
     console.log("Adding particle at", x, y);
     this.positions.push(x, y, 0);
     this.colors.push(color.r, color.g, color.b);
-    this.velocities.push(0, 0, 0);
     this.update();
   }
 
@@ -43,46 +41,49 @@ export class SandSystem {
   }
 
   updatePhysics() {
-    const gravity = -0.005;
+    const stepsPerFrame = 6;
 
-    for (let p = 0; p < this.positions.length; p += 3) {
-      const gravity = 0.01;
+    for (let step = 0; step < stepsPerFrame; step++) {
+      for (let p = 0; p < this.positions.length; p += 3) {
+        const gravity = 0.01;
 
-      let x = this.positions[p];
-      let y = this.positions[p + 1];
+        let x = this.positions[p];
+        let y = this.positions[p + 1];
 
-      let [i, j] = this.worldToGrid(x, y);
+        let [i, j] = this.worldToGrid(x, y);
 
-      if (j <= 0) {
-        y = -1;
-        this.grid[i][0] = true;
-        this.positions[p + 1] = y;
-        continue;
-      }
+        if (j <= 0) {
+          y = -1;
+          this.grid[i][0] = true;
+          const [, wy] = this.gridToWorld(i, 0);
+          this.positions[p + 1] = wy;
+          continue;
+        }
 
-      if (j > 0 && !this.grid[i][j - 1]) {
-        y -= gravity;
-        j -= 1;
-      } else {
+        if (!this.grid[i][j - 1]) {
+          const [, wy] = this.gridToWorld(i, j - 1);
+          this.positions[p + 1] = wy;
+          continue;
+        }
+
+        const dirs = Math.random() < 0.5 ? [-1, 1] : [1, -1];
         let moved = false;
-        if (i > 0 && !this.grid[i - 1][j - 1]) {
-          i -= 1;
-          j -= 1;
-          y -= gravity;
-          moved = true;
-        } else if (i < this.gridSize - 1 && !this.grid[i + 1][j - 1]) {
-          i += 1;
-          j -= 1;
-          y -= gravity;
-          moved = true;
+
+        for (const d of dirs) {
+          const ni = i + d;
+          if (ni >= 0 && ni < this.gridSize && !this.grid[ni][j - 1]) {
+            const [wx, wy] = this.gridToWorld(ni, j - 1);
+            this.positions[p] = wx;
+            this.positions[p + 1] = wy;
+            moved = true;
+            break;
+          }
         }
         if (!moved) {
           this.grid[i][j] = true;
           continue;
         }
       }
-      this.positions[p] = x;
-      this.positions[p + 1] = y;
     }
   }
 

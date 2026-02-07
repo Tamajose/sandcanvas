@@ -12,13 +12,32 @@ let isPouring = false;
 let mouseX = 0;
 let mouseY = 0;
 
-canvas.addEventListener("click", (event) => {
-  const rect = canvas.getBoundingClientRect();
-
-  const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-  const y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
-
-  sandSystem.addParticle(x, y, { r: 1, g: 0, b: 0 });
+canvas.addEventListener("mousedown", () => {
+  isPouring = true;
 });
 
-startLoop(scene, camera, renderer, sandSystem);
+canvas.addEventListener("mouseup", () => {
+  isPouring = false;
+});
+
+canvas.addEventListener("mouseleave", () => {
+  isPouring = false;
+});
+
+canvas.addEventListener("mousemove", (event) => {
+  const rect = canvas.getBoundingClientRect();
+
+  mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouseY = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+});
+
+startLoop(scene, camera, renderer, sandSystem, () => {
+  if (isPouring) {
+    for (let i = 0; i < 5; i++) {
+      sandSystem.addSand(mouseX, mouseY);
+    }
+  }
+
+  sandSystem.updatePhysics();
+  sandSystem.update();
+});

@@ -31,10 +31,18 @@ canvas.addEventListener("mousemove", (event) => {
   mouseY = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
 });
 
+let currentColor = 1;
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "1") currentColor = 1;
+  if (e.key === "2") currentColor = 2;
+  if (e.key === "3") currentColor = 3;
+});
+
 startLoop(scene, camera, renderer, sandSystem, () => {
   if (isPouring) {
     for (let i = 0; i < 5; i++) {
-      sandSystem.addSand(mouseX, mouseY);
+      sandSystem.addSand(mouseX, mouseY, currentColor);
     }
   }
 

@@ -32,17 +32,30 @@ canvas.addEventListener("mousemove", (event) => {
 });
 
 let currentColor = 1;
+const MAX_COLOR = 7;
 
-window.addEventListener("keydown", (e) => {
-  if (e.key === "1") currentColor = 1;
-  if (e.key === "2") currentColor = 2;
-  if (e.key === "3") currentColor = 3;
+canvas.addEventListener("wheel", (e) => {
+  e.preventDefault();
+
+  if (e.deltaY > 0) {
+    currentColor++;
+  } else {
+    currentColor--;
+  }
+
+  if (currentColor < 1) currentColor = MAX_COLOR;
+  if (currentColor > MAX_COLOR) currentColor = 1;
 });
 
 startLoop(scene, camera, renderer, sandSystem, () => {
   if (isPouring) {
     for (let i = 0; i < 5; i++) {
-      sandSystem.addSand(mouseX, mouseY, currentColor);
+      const radius = 0.02;
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.random() * radius;
+      const spawnX = mouseX + Math.cos(angle) * r;
+      const spawnY = mouseY + Math.sin(angle) * r;
+      sandSystem.addSand(spawnX, spawnY, currentColor);
     }
   }
 

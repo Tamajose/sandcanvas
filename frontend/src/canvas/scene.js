@@ -13,5 +13,7 @@ export function initScene(canvas) {
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
   return { scene, camera, renderer };
 }

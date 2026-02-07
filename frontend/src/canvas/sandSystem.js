@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class SandSystem {
   constructor(scene) {
-    this.gridSize = 200;
+    this.gridSize = 400;
 
     this.grid = Array(this.gridSize)
       .fill(0)
@@ -10,14 +10,18 @@ export class SandSystem {
 
     this.geometry = new THREE.BufferGeometry();
     this.material = new THREE.PointsMaterial({
-      size: 2 / this.gridSize,
+      size: (2 / this.gridSize) * 1.3,
       vertexColors: true,
     });
 
     this.palette = {
-      1: new THREE.Color(1.0, 0.85, 0.6), // yellow sand
-      2: new THREE.Color(0.9, 0.3, 0.3), // red sand
-      3: new THREE.Color(0.3, 0.6, 1.0), // blue sand
+      1: new THREE.Color(1.0, 0.85, 0.6), // yellow
+      2: new THREE.Color(0.9, 0.3, 0.3), // red
+      3: new THREE.Color(0.3, 0.6, 1.0), // blue
+      4: new THREE.Color(0.5, 0.9, 0.5), // green
+      5: new THREE.Color(0.9, 0.9, 0.9), // white
+      6: new THREE.Color(0.6, 0.4, 0.25), // brown
+      7: new THREE.Color(1, 0.2, 1), // gray
     };
 
     this.positions = [];
@@ -38,6 +42,14 @@ export class SandSystem {
     const wx = (x / (this.gridSize - 1)) * 2 - 1;
     const wy = (y / (this.gridSize - 1)) * 2 - 1;
     return [wx, wy];
+  }
+
+  jitterColor(color, amount = 0.12) {
+    return {
+      r: THREE.MathUtils.clamp(color.r + (Math.random() - 0.5) * amount, 0, 1),
+      g: THREE.MathUtils.clamp(color.g + (Math.random() - 0.5) * amount, 0, 1),
+      b: THREE.MathUtils.clamp(color.b + (Math.random() - 0.5) * amount, 0, 1),
+    };
   }
 
   addSand(x, y, colorId = 1) {
@@ -82,8 +94,10 @@ export class SandSystem {
           const [wx, wy] = this.gridToWorld(x, y);
           this.positions.push(wx, wy, 0);
 
-          const clr = this.palette[sandType];
-          this.colors.push(clr.r, clr.g, clr.b);
+          const base = this.palette[sandType];
+          const c = this.jitterColor(base);
+
+          this.colors.push(c.r, c.g, c.b);
         }
       }
     }

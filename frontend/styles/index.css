@@ -1,0 +1,227 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  animation: fadeUp 0.8s ease-out;
+}
+
+/* Background Container */
+.container {
+  width: 100%;
+  height: 100vh;
+  background: radial-gradient(circle at top, #2a2a2a 0%, #141414 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Overlay for better text readability */
+.container::before {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Content Wrapper */
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 600px;
+  padding: 40px;
+}
+
+/* Header Section */
+.header-section {
+  margin-bottom: 80px;
+}
+
+/* Title */
+.title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 80px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  color: #f5deb3;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+  margin-bottom: 0px;
+  letter-spacing: 4px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  text-transform: uppercase;
+  background: transparent;
+  padding: 40px 30px;
+  box-shadow: none;
+  border: none;
+  padding: 20px 0;
+}
+
+.title span:first-child {
+  margin-left: 10px;
+}
+
+.title span:last-child {
+  margin-left: 40px;
+}
+
+.tagline {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 15px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Authentication Section */
+.auth-section {
+  padding: 30px 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+/* Auth Button Group */
+.auth-button-group {
+  display: flex;
+  gap: 45px;
+  margin-bottom: 45px;
+  justify-content: center;
+}
+
+/* Auth Option Container */
+.auth-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Auth Labels */
+.auth-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: #ffffff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+/* Button Base Styles */
+.btn {
+  padding: 14px 36px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 28px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: "Poppins", sans-serif;
+  min-width: 160px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5f5f5;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #f2d08d, #e3b35c);
+  color: #1a1a1a;
+  border: none;
+  box-shadow: 0 10px 30px rgba(242, 208, 141, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(242, 208, 141, 0.55);
+}
+
+/* Sign Up Button */
+.btn-signup {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.btn-signup:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Sign In Button */
+.btn-signin {
+  background: rgba(255, 255, 255, 0.12);
+  color: #dddddd;
+}
+
+.btn-signin:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 50px;
+  }
+
+  .tagline {
+    font-size: 16px;
+    text-align: center;
+    margin-left: 0;
+    padding-right: 0;
+  }
+
+  .auth-button-group {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .auth-section {
+    padding: 30px 20px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 40px;
+  }
+
+  .tagline {
+    font-size: 14px;
+  }
+
+  .header-section {
+    margin-bottom: 50px;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

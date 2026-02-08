@@ -70,6 +70,16 @@ web_modules/
 .env.*
 !.env.example
 
+# Uploaded files
+uploads/*
+!uploads/.gitkeep
+
+# Image types
+*.jpg
+*.jpeg
+*.png
+*.webp
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache

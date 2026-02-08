@@ -9,8 +9,8 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "email": "demo@sand.com",
-  "password": "demo123"
+  "email": "test@sand.com",
+  "password": "test123"
 }
 
 ###
@@ -20,8 +20,17 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "demo@sand.com",
-  "password": "demo123"
+  "email": "test@sand.com",
+  "password": "test123"
 }
 
 ###
+
+### Testing
+POST http://localhost:3000/api/creations
+Content-Type: application/json
+Authorization: Bearer <PASTE_TOKEN_HERE>
+
+{
+  "imagePath": "test-image-path.png"
+}

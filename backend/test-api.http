@@ -1,0 +1,27 @@
+### Check server
+GET http://localhost:3000/check
+Accept: application/json
+
+###
+
+### Register a user
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "demo@sand.com",
+  "password": "demo123"
+}
+
+###
+
+### Login the user
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@sand.com",
+  "password": "demo123"
+}
+
+###

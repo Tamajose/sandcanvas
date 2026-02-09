@@ -1,65 +1,53 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In - SandCanvas</title>
-    <link rel="stylesheet" href="/styles/auth.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap"
-      rel="stylesheet"
-    />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In - SandCanvas</title>
+  <link rel="stylesheet" href="/styles/auth.css" />
 
-  <body>
-    <div class="container">
-      <div class="auth-card">
-        <!-- Title -->
-        <h1 class="auth-title">Sign In</h1>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap"
+    rel="stylesheet" />
+</head>
 
-        <!-- Sign In Form -->
-        <form class="auth-form" id="signin-form">
-          <!-- Username or Email Input -->
-          <div class="input-group">
-            <label for="username-email">
-              Username / Email address <span class="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="username-email"
-              name="username-email"
-              placeholder="Enter username or email"
-              required
-            />
-          </div>
+<body>
+  <div class="container">
+    <div class="auth-card">
+      <!-- Title -->
+      <h1 class="auth-title">Sign In</h1>
 
-          <!-- Password Input -->
-          <div class="input-group">
-            <label for="password">
-              Password<span class="required">*</span>
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter password"
-              required
-            />
-          </div>
+      <!-- Sign In Form -->
+      <form class="auth-form" id="signin-form" action="profile.html" method="get">
+        <!-- Username or Email Input -->
+        <div class="input-group">
+          <label for="username-email">
+            Username / Email address <span class="required">*</span>
+          </label>
+          <input type="text" id="username-email" name="username-email" placeholder="Enter username or email" required />
+        </div>
 
-          <!-- Submit Button -->
-          <button type="submit" class="submit-btn">Sign in</button>
-        </form>
+        <!-- Password Input -->
+        <div class="input-group">
+          <label for="password">
+            Password<span class="required">*</span>
+          </label>
+          <input type="password" id="password" name="password" placeholder="Enter password" required />
+        </div>
 
-        <!-- Sign Up Link -->
-        <p class="switch-auth">
-          New here?
-          <a href="signup.html" class="auth-link">Create account</a>
-        </p>
-      </div>
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn">Sign in</button>
+      </form>
+
+      <!-- Sign Up Link -->
+      <p class="switch-auth">
+        New here?
+        <a href="signup.html" class="auth-link">Create account</a>
+      </p>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

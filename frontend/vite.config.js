@@ -9,5 +9,6 @@ export default defineConfig({
     canvas: "canvas.html",
     signin: "signin.html",
     signup: "signup.html",
+    profile: "profile.html",
   },
 });

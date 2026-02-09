@@ -32,7 +32,7 @@ canvas.addEventListener("mousemove", (event) => {
 });
 
 let currentColor = 1;
-const MAX_COLOR = 7;
+const MAX_COLOR = 15;
 
 canvas.addEventListener("wheel", (e) => {
   e.preventDefault();
@@ -80,6 +80,42 @@ cancelBtn.addEventListener("click", () => {
 confirmBtn.addEventListener("click", () => {
   sandSystem.reset();
   resetModal.style.display = "none";
+});
+
+const saveBtn = document.getElementById("save-btn");
+
+saveBtn.addEventListener("click", () => {
+  canvas.toBlob(async (blob) => {
+    const formData = new FormData();
+    formData.append("image", blob, "creation.png");
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("No token found!");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/creations", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert("Creation Saved!");
+      } else {
+        console.error("Failed to save");
+        alert("Failed to save");
+      }
+    } catch (error) {
+      console.error("Error saving: ", error);
+      alert("Error saving");
+    }
+  });
 });
 
 resetModal.addEventListener("click", (e) => {

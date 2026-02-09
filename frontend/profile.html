@@ -86,7 +86,7 @@
 
       <!-- Main Content Area -->
       <main class="main-content">
-        <div class="empty-state">
+        <div id="empty-state" class="empty-state">
           <svg
             class="empty-icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -104,8 +104,20 @@
           <p class="empty-message">No saved creations</p>
           <p class="empty-subtitle">Sandscape your first masterpiece</p>
         </div>
+
+        <div id="creations-grid" class="creations-grid">
+          <!-- Creations will be injected here -->
+        </div>
       </main>
     </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal-backdrop">
+      <span class="close-modal">&times;</span>
+      <img class="modal-content-img" id="expanded-image" />
+    </div>
+
+    <script type="module" src="./src/profile/profile.js"></script>
 
     <!-- Floating Action Button -->
     <a href="/canvas" class="fab">

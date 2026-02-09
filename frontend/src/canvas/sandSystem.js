@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class SandSystem {
   constructor(scene) {
-    this.gridSize = 400;
+    this.gridSize = 450;
 
     this.grid = Array(this.gridSize)
       .fill(0)
@@ -10,18 +10,26 @@ export class SandSystem {
 
     this.geometry = new THREE.BufferGeometry();
     this.material = new THREE.PointsMaterial({
-      size: (2 / this.gridSize) * 1.3,
+      size: (2 / this.gridSize) * 2.5,
       vertexColors: true,
     });
 
     this.palette = {
-      1: new THREE.Color(1.0, 0.85, 0.6), // yellow
-      2: new THREE.Color(0.9, 0.3, 0.3), // red
-      3: new THREE.Color(0.3, 0.6, 1.0), // blue
-      4: new THREE.Color(0.5, 0.9, 0.5), // green
-      5: new THREE.Color(0.9, 0.9, 0.9), // white
-      6: new THREE.Color(0.6, 0.4, 0.25), // brown
-      7: new THREE.Color(1, 0.2, 1), // gray
+      1: new THREE.Color(1.0, 0.95, 0.2), // Vibrant Yellow
+      2: new THREE.Color(1.0, 0.0, 0.2), // Neon Red
+      3: new THREE.Color(0.0, 0.8, 1.0), // Electric Blue
+      4: new THREE.Color(0.2, 1.0, 0.2), // Neon Green
+      5: new THREE.Color(1.0, 1.0, 1.0), // Pure White
+      6: new THREE.Color(1.0, 0.5, 0.0), // Bright Orange
+      7: new THREE.Color(0.8, 0.0, 1.0), // Electric Purple
+      8: new THREE.Color(0.0, 0.0, 0.0), // Black
+      9: new THREE.Color(0.0, 1.0, 1.0), // Cyan
+      10: new THREE.Color(1.0, 0.0, 0.6), // Hot Pink
+      11: new THREE.Color(0.5, 1.0, 0.0), // Lime Green
+      12: new THREE.Color(0.5, 0.0, 1.0), // Deep Violet
+      13: new THREE.Color(0.0, 0.8, 0.8), // Bright Teal
+      14: new THREE.Color(1.0, 0.5, 0.5), // Coral
+      15: new THREE.Color(1.0, 0.84, 0.0), // Gold
     };
 
     this.positions = [];

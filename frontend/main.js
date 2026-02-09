@@ -62,3 +62,28 @@ startLoop(scene, camera, renderer, sandSystem, () => {
   sandSystem.updatePhysics();
   sandSystem.update();
 });
+
+const resetBtn = document.getElementById("reset-btn");
+const resetModal = document.getElementById("reset-modal");
+const confirmBtn = document.getElementById("confirm-reset");
+const cancelBtn = document.getElementById("cancel-reset");
+
+resetBtn.addEventListener("click", () => {
+  resetModal.style.display = "flex";
+  isPouring = false;
+});
+
+cancelBtn.addEventListener("click", () => {
+  resetModal.style.display = "none";
+});
+
+confirmBtn.addEventListener("click", () => {
+  sandSystem.reset();
+  resetModal.style.display = "none";
+});
+
+resetModal.addEventListener("click", (e) => {
+  if (e.target === resetModal) {
+    resetModal.style.display = "none";
+  }
+});

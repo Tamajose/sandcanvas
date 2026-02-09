@@ -112,4 +112,23 @@ export class SandSystem {
     );
     this.geometry.computeBoundingSphere();
   }
+
+  reset() {
+    this.grid = Array(this.gridSize)
+      .fill(0)
+      .map(() => Array(this.gridSize).fill(0));
+
+    this.positions = [];
+    this.colors = [];
+
+    this.geometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(this.positions, 3),
+    );
+    this.geometry.setAttribute(
+      "color",
+      new THREE.Float32BufferAttribute(this.colors, 3),
+    );
+    this.geometry.computeBoundingSphere();
+  }
 }

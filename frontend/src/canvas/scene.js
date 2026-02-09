@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 export function initScene(canvas) {
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x2a2a2a);
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
   camera.position.z = 1;

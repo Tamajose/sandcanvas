@@ -1,16 +1,36 @@
 <!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SandCanvas</title>
     <link rel="stylesheet" href="/styles/style.css" />
-</head>
 
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
     <canvas id="sand-canvas"></canvas>
     <script type="module" src="./main.js"></script>
-</body>
 
+    <div id="ui-layer">
+      <button id="reset-btn" class="btn-icon">Reset</button>
+    </div>
+
+    <div id="reset-modal" class="modal-backdrop" style="display: none">
+      <div class="modal-content">
+        <h2>Clear Canvas?</h2>
+        <p>This will remove all your sand art. This action cannot be undone.</p>
+        <div class="modal-actions">
+          <button id="cancel-reset" class="btn-text">Cancel</button>
+          <button id="confirm-reset" class="btn-danger">Clear</button>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

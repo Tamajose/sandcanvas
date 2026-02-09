@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
 //Routes
 app.use("/api/creations", sandRoutes);
@@ -19,7 +20,7 @@ app.use("/api/auth", authRoutes);
 
 //Check
 app.get("/check", (req, res) => {
-    res.json({ message: "Server is running" });
+  res.json({ message: "Server is running" });
 });
 
 export default app;

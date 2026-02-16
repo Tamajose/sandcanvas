@@ -42,17 +42,54 @@ const fetchCreations = async () => {
       creations.forEach((creation) => {
         const imgContainer = document.createElement("div");
         imgContainer.className = "creation-item";
+        imgContainer.dataset.id = creation._id;
 
         const img = document.createElement("img");
         img.src = `http://localhost:3000${creation.imagePath}`;
         img.alt = "Sand Creation";
 
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-btn";
+        deleteBtn.innerHTML = "&times;";
+        deleteBtn.title = "Delete Creation";
+
         imgContainer.appendChild(img);
+        imgContainer.appendChild(deleteBtn);
         creationsGrid.appendChild(imgContainer);
 
-        imgContainer.addEventListener("click", () => {
+        imgContainer.addEventListener("click", (e) => {
+          if (e.target === deleteBtn) return;
           expandedImage.src = img.src;
           imageModal.style.display = "flex";
+        });
+
+        deleteBtn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          if (confirm("Are you sure you want to delete this creation?")) {
+            try {
+              const res = await fetch(
+                `http://localhost:3000/api/creations/${creation._id}`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                },
+              );
+
+              if (res.ok) {
+                imgContainer.remove();
+                if (creationsGrid.children.length === 0) {
+                  emptyState.style.display = "block";
+                }
+              } else {
+                alert("Failed to delete creation");
+              }
+            } catch (error) {
+              console.error("Delete Error:", error);
+              alert("Error deleting creation");
+            }
+          }
         });
       });
     } else {

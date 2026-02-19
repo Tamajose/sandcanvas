@@ -1,52 +1,53 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SandCanvas</title>
-    <link rel="stylesheet" href="/styles/index.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap"
-      rel="stylesheet"
-    />
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SandCanvas</title>
+  <link rel="stylesheet" href="/styles/index.css">
 
-  <body>
-    <div class="container">
-      <div class="content">
-        <!-- Title and Tagline -->
-        <div class="header-section">
-          <h1 class="title">
-            <span>Sand</span>
-            <span>Canvas</span>
-          </h1>
-        </div>
+  <!--for using google fonts + better performance  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap">
+</head>
 
-        <!-- Main Action Button -->
-        <div style="margin-bottom: 2rem">
-          <a href="/canvas" class="btn btn-primary">Start Creating Now</a>
-        </div>
+<body>
+  <div class="container">
+    <div class="content">
+      <!-- Title -->
+      <div class="header-section">
+        <h1 class="title">
+          <span>Sand</span>
+          <span>Canvas</span>
+        </h1>
+      </div>
 
-        <!-- Authentication Buttons -->
-        <div class="auth-section">
-          <div class="auth-button-group">
-            <!-- Sign Up -->
-            <div class="auth-option">
-              <p class="auth-label">New here?</p>
-              <a href="/signup" class="btn btn-signup">Sign up</a>
-            </div>
+      <!-- Start Creating Button -->
+      <div style="margin-bottom: 2rem">
+        <a href="/canvas" class="btn btn-primary">Start Creating Now</a>
+      </div>
 
-            <!-- Sign In -->
-            <div class="auth-option">
-              <p class="auth-label">Already have an account?</p>
-              <a href="/signin" class="btn btn-signin">Sign in</a>
-            </div>
+      <!-- Authentication Buttons -->
+      <div class="auth-section">
+        <div class="auth-button-group">
+          <!-- Sign Up -->
+          <div class="auth-option">
+            <p class="auth-label">New here?</p>
+            <a href="/signup" class="btn btn-signup">Sign up</a>
+          </div>
+
+          <!-- Sign In -->
+          <div class="auth-option">
+            <p class="auth-label">Already have an account?</p>
+            <a href="/signin" class="btn btn-signin">Sign in</a>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

@@ -1,6 +1,12 @@
-const API_URL = "http://localhost:3000/api/auth";
+const API_URL = import.meta.env.VITE_API_URL;
 
-document.addEventListener("DOMContentLoaded", () => {
+function initGoogle(){
+    if(!window.google){
+        console.log("Google not loaded yet, retrying..");
+        setTimeout(initGoogle, 100);
+        return;
+    }
+
     google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse
@@ -16,7 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
             logo_alignment: "left"
         }
     );
-});
+}
+
+document.addEventListener("DOMContentLoaded", initGoogle);
 
 async function handleCredentialResponse(response) {
     try{

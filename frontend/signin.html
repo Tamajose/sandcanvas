@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap"
     rel="stylesheet" />
+  
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
@@ -41,8 +43,12 @@
         <button type="submit" class="submit-btn">Sign in</button>
       </form>
 
-      <script type="module" src="./src/auth/signin.js"></script>
+      <div class="or-separator">
+        <span>OR</span>
+      </div>
 
+      <div id="googleBtn" class="google-button"></div>
+      
       <!-- Sign Up Link -->
       <p class="switch-auth">
         New here?
@@ -50,6 +56,9 @@
       </p>
     </div>
   </div>
+
+  <script type="module" src="./src/auth/signin.js"></script>
+  <script type="module" src="./src/api/googleAuth.js"></script>
 </body>
 
 </html>

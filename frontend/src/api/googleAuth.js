@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function handleCredentialResponse(response) {
     try{
-        const res = await fetch(`${GOOGLE_API_URL}/google`, {
+        const res = await fetch(`${API_URL}/google`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

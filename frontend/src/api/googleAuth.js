@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function handleCredentialResponse(response) {
     try{
+        // console.log("Google Response: ", response);
+        const token = response.credential;
+        if(!token) return alert("No token received from Google!");
         const res = await fetch(`${API_URL}/google`, {
             method: "POST",
             headers: {

@@ -99,10 +99,10 @@ export const loginUser = async (req, res) => {
 
 export const googleLogin = async (req, res) => {
     try{
-        const { credentials } = req.body;
+        const { credential } = req.body;
 
         const ticket = await client.verifyIdToken({
-            idToken: credentials,
+            idToken: credential,
             audience: process.env.GOOGLE_CLIENT_ID,
         });
 

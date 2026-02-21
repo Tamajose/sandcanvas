@@ -9,7 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
     google.accounts.id.renderButton(
         document.getElementById("googleBtn"),
         {
-            theme: "outline", size: "large"
+            theme: "outline", 
+            size: "large",
+            shape: "pill",
+            text: "continue_with",
+            logo_alignment: "left"
         }
     );
 });

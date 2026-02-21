@@ -77,7 +77,8 @@ body {
 /* Authentication Section */
 .auth-section {
   padding: 30px 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
 }
 
 /* Auth Button Group */
@@ -182,7 +183,7 @@ body {
   }
 
   .auth-section {
-    padding: 30px 20px;
+    padding: 30px 30px;
   }
 
   .btn {

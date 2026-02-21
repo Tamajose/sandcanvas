@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema({
     passwordHash: {
         type: String,
         required: true
+    },
+    googleId: {
+        type: String
     }
 }, { timestamps: true });
 

@@ -1,4 +1,5 @@
 import { loginUser } from "../api/auth";
+import "../api/googleAuth.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const signinForm = document.getElementById("signin-form");

@@ -63,6 +63,12 @@
 
   <script type="module" src="./src/auth/signup.js"></script>
   <script type="module" src="./src/api/googleAuth.js"></script>
-</body>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
 
+    if(savedTheme === 'light'){
+      document.body.classList.add('light-mode');
+    }
+  </script>
+</body>
 </html>

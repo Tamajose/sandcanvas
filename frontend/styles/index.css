@@ -18,6 +18,10 @@ body.light-mode{
   background-color: #fff7e0;
 }
 
+body, .container, .title, .btn, .auth-label {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
 .content {
   animation: fadeUp 0.9s ease-out;
 }
@@ -209,64 +213,6 @@ body.light-mode .btn-signin{
   color: #0a2e44;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .title {
-    font-size: 50px;
-  }
-
-  .tagline {
-    font-size: 16px;
-    text-align: center;
-    margin-left: 0;
-    padding-right: 0;
-  }
-
-  .auth-button-group {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .content {
-    padding: 20px;
-  }
-
-  .auth-section {
-    padding: 30px 30px;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .title {
-    font-size: 40px;
-  }
-
-  .tagline {
-    font-size: 14px;
-  }
-
-  .header-section {
-    margin-bottom: 50px;
-  }
-}
-
-/* for animation */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .or-separator{
   display: flex;
   align-items: center;
@@ -341,8 +287,73 @@ body.light-mode .or-separator::after{
   display: block;
 }
 
+.theme-toggle:focus{
+  outline: none;
+}
 
 body.light-mode .theme-toggle{
   border: 1px solid #0a2e44;
   color: #0a2e44;
+}
+
+body.light-mode .theme-toggle:hover{
+  background: rgba(10, 46, 68, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 50px;
+  }
+
+  .tagline {
+    font-size: 16px;
+    text-align: center;
+    margin-left: 0;
+    padding-right: 0;
+  }
+
+  .auth-button-group {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .auth-section {
+    padding: 30px 30px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 40px;
+  }
+
+  .tagline {
+    font-size: 14px;
+  }
+
+  .header-section {
+    margin-bottom: 50px;
+  }
+}
+
+/* for animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

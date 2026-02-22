@@ -14,6 +14,10 @@ body {
   overflow: hidden;
 }
 
+body.light-mode{
+  background-color: #fff7e0;
+}
+
 .content {
   animation: fadeUp 0.9s ease-out;
 }
@@ -27,6 +31,10 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
+}
+
+body.light-mode .container{
+  background: #fff7e0;
 }
 
 /* Content Wrapper */
@@ -64,6 +72,11 @@ body {
   box-shadow: none;
   border: none;
   padding: 20px 0;
+}
+
+body.light-mode .title{
+  color: #0a2e44;
+  text-shadow: none;
 }
 
 .title span:first-child {
@@ -106,6 +119,11 @@ body {
   margin: 0;
 }
 
+body.light-mode .auth-label{
+  color: #0a2e44;
+  text-shadow: none;
+}
+
 /* Button Base Styles */
 .btn {
   padding: 14px 36px;
@@ -126,11 +144,24 @@ body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
+body.light-mode .btn{
+  background: #ffffff;
+  color: #0a2e44;
+  border: 1px solid #0a2e44;
+  box-shadow: none;
+}
+
 .btn-primary {
   background: #f2d08d;
   color: #1a1a1a;
   border: none;
   box-shadow: 0 10px 30px rgba(242, 208, 141, 0.35);
+}
+
+body.light-mode .btn-primary{
+  background: #0a2e44;
+  color: #fff7e0;
+  box-shadow: 0 6px 12px rgba(10, 46, 68, 0.4);
 }
 
 .btn-primary:hover {
@@ -149,6 +180,12 @@ body {
   transform: translateY(-2px);
 }
 
+body.light-mode .btn-signup:hover{
+  background: rgba(10, 46, 68, 0.05);
+  box-shadow: 0 6px 20px rgba(10, 46, 68, 0.4);
+  transform: translateY(-2px);
+}
+
 /* Sign In Button */
 .btn-signin {
   background: rgba(255, 255, 255, 0.12);
@@ -158,6 +195,18 @@ body {
 .btn-signin:hover {
   background: rgba(255, 255, 255, 0.22);
   transform: translateY(-2px);
+}
+
+body.light-mode .btn-signin:hover{
+  background: rgba(10, 46, 68, 0.05);
+  box-shadow: 0 6px 20px rgba(10, 46, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+body.light-mode .btn-signup,
+body.light-mode .btn-signin{
+  background: #ffffff;
+  color: #0a2e44;
 }
 
 /* Responsive Design */
@@ -229,12 +278,20 @@ body {
   gap: 6px;
 }
 
+body.light-mode .or-separator{
+  color: #0a2e44;
+}
+
 .or-separator span {
   white-space: nowrap;
   position: relative;
   z-index: 1;
   padding: 0 5px;
   color: #aaa;
+}
+
+body.light-mode .or-separator span{
+  color: #0a2e44;
 }
 
 .or-separator::before,
@@ -245,8 +302,47 @@ body {
   background-color: #aaa;
 }
 
+body.light-mode .or-separator::before,
+body.light-mode .or-separator::after{
+  background-color: #0a2e44;
+}
+
 .google-button{
   display: flex;
   justify-content: center;
   margin-top: 16px;
+}
+
+.theme-toggle{
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: transparent;
+  z-index: 999;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  height: 45px;
+  width: 44px;
+  cursor: pointer;
+  color: #f5deb3;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover{
+  transform: scale(1.1);
+}
+
+.theme-toggle svg{
+  flex-shrink: 0;
+  display: block;
+}
+
+
+body.light-mode .theme-toggle{
+  border: 1px solid #0a2e44;
+  color: #0a2e44;
 }

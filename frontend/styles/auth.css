@@ -41,7 +41,8 @@ body.light-mode .container {
 }
 
 body.light-mode .container::before {
-  background: transparent; /* remove dark overlay */
+  background: transparent;
+  /* remove dark overlay */
 }
 
 /* Auth Card */
@@ -209,10 +210,19 @@ body.light-mode .auth-link {
   z-index: 10;
 }
 
+body.light-mode .back-btn {
+  color: rgba(12, 47, 70, 0.6);
+}
+
 .back-btn:hover {
   color: #f5deb3;
   transform: translateX(-5px);
   text-shadow: 0 0 8px rgba(245, 222, 179, 0.4);
+}
+
+body.light-mode .back-btn:hover {
+  color: #041f31;
+  text-shadow: 0 0 8px rgba(10, 46, 68, 0.2);
 }
 
 .or-separator {

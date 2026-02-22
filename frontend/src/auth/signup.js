@@ -12,7 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("password").value;
 
       try {
-        const response = await registerUser({ email, password });
+        const response = await registerUser({
+          email,
+          password,
+          name: username,
+        });
 
         localStorage.setItem("token", response.token);
         localStorage.setItem("user", JSON.stringify(response.user));

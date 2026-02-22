@@ -26,7 +26,7 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ email, passwordHash });
+    const user = await User.create({ email, passwordHash, name });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -38,6 +38,7 @@ export const registerUser = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
+        name: user.name,
       },
     });
   } catch (error) {
@@ -103,7 +104,7 @@ export const googleLogin = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { email, sub } = payload;
+    const { email, sub, name, picture } = payload;
 
     let user = await User.findOne({ email });
 
@@ -111,7 +112,15 @@ export const googleLogin = async (req, res) => {
       user = await User.create({
         email,
         googleId: sub,
+        name: name,
+        profileImage: { url: picture, publicId: "" },
       });
+    } else {
+      if (!user.name) user.name = name;
+      if (!user.profileImage?.url) {
+        user.profileImage = { url: picture, publicId: "" };
+      }
+      await user.save();
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -124,6 +133,8 @@ export const googleLogin = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
+        name: user.name,
+        profileImage: user.profileImage,
       },
     });
   } catch (error) {
@@ -131,5 +142,14 @@ export const googleLogin = async (req, res) => {
     res.status(401).json({
       message: "Google Authentication Failed",
     });
+  }
+};
+
+export const getUserInfo = async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.error("Get Profile Error:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };

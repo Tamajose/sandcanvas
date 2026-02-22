@@ -192,7 +192,30 @@ body.light-mode .auth-link {
   text-decoration: underline;
 }
 
-.or-separator{
+/* Back Button */
+.back-btn {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(245, 222, 179, 0.7);
+  text-decoration: none;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 10;
+}
+
+.back-btn:hover {
+  color: #f5deb3;
+  transform: translateX(-5px);
+  text-shadow: 0 0 8px rgba(245, 222, 179, 0.4);
+}
+
+.or-separator {
   display: flex;
   align-items: center;
   text-align: center;
@@ -219,7 +242,7 @@ body.light-mode .auth-link {
   background-color: #aaa;
 }
 
-.google-button{
+.google-button {
   display: flex;
   justify-content: center;
   margin-top: 12px;

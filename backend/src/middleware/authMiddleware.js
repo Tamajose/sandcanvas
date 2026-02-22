@@ -2,28 +2,37 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
 export const protect = async (req, res, next) => {
-    let token;
+  let token;
 
-    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
-        try{
-            token = req.headers.authorization.split(" ")[1];
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            req.user = await User.findById(decoded.id).select("-passwordHash");
+      req.user = await User.findById(decoded.id).select("-passwordHash");
 
-            next();
-        } catch(error){
-            console.error("Auth-Middleware Error: ", error);
-            return res.status(401).json({
-                message: "Not Authorized: token failed"
-            });
-        }
-    }
-
-    if(!token){
+      if (!req.user) {
         return res.status(401).json({
-                message: "Not Authorized: No available token"
-            });
+          message: "Not Authorized: User not found",
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.error("Auth-Middleware Error: ", error);
+      return res.status(401).json({
+        message: "Not Authorized: token failed",
+      });
     }
+  }
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Not Authorized: No available token",
+    });
+  }
 };

@@ -1,10 +1,8 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import sandRoutes from "./routes/sandRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-
-dotenv.config();
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 
@@ -17,6 +15,7 @@ app.use("/uploads", express.static("uploads"));
 //Routes
 app.use("/api/creations", sandRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 //Check
 app.get("/check", (req, res) => {

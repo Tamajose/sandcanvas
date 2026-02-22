@@ -1,101 +1,125 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SandCanvas</title>
+    <link rel="stylesheet" href="/styles/index.css" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SandCanvas</title>
-  <link rel="stylesheet" href="/styles/index.css">
+    <!--for using google fonts + better performance  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap"
+    />
 
-  <!--for using google fonts + better performance  -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Orbitron:wght@400..900&display=swap">
+    <script
+      src="https://accounts.google.com/gsi/client?hl=en"
+      async
+      defer
+    ></script>
+  </head>
 
-  <script src="https://accounts.google.com/gsi/client?hl=en" async defer></script>
-</head>
+  <body>
+    <button id="themeToggle" class="theme-toggle">
+      <svg
+        id="moonIcon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M6 .278a.77.77 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06a.752.752 0 0 1 .876.218z"
+        />
+      </svg>
 
-<body>
-  <button id="themeToggle" class="theme-toggle">
-    <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M6 .278a.77.77 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06a.752.752 0 0 1 .876.218z"/>
-    </svg>
+      <svg
+        id="sunIcon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+        style="display: none"
+      >
+        <path
+          d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"
+        />
+      </svg>
+    </button>
 
-    <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" style="display:none;">
-      <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
-    </svg>
-  </button>
-
-  <div class="container">
-    <div class="content">
-      <!-- Title -->
-      <div class="header-section">
-        <h1 class="title">
-          <span>Sand</span>
-          <span>Canvas</span>
-        </h1>
-      </div>
-
-      <!-- Start Creating Button -->
-      <div style="margin-bottom: 2rem">
-        <a href="/canvas" class="btn btn-primary">Start Creating Now</a>
-      </div>
-
-      <!-- Authentication Buttons -->
-      <div class="auth-section">
-        <div class="auth-button-group">
-          <!-- Sign Up -->
-          <div class="auth-option">
-            <p class="auth-label">New here?</p>
-            <a href="/signup" class="btn btn-signup">Sign up</a>
-          </div>
-
-          <!-- Sign In -->
-          <div class="auth-option">
-            <p class="auth-label">Already have an account?</p>
-            <a href="/signin" class="btn btn-signin">Sign in</a>
-          </div>
+    <div class="container">
+      <div class="content">
+        <!-- Title -->
+        <div class="header-section">
+          <h1 class="title">
+            <span>Sand</span>
+            <span>Canvas</span>
+          </h1>
         </div>
 
-        <div class="or-separator">
-          <span>OR</span>
+        <!-- Start Creating Button -->
+        <div style="margin-bottom: 2rem">
+          <a href="/canvas" class="btn btn-primary">Start Creating Now</a>
         </div>
 
-        <div id="googleBtn" class="google-button"></div>
+        <!-- Authentication Buttons -->
+        <div class="auth-section">
+          <div class="auth-button-group">
+            <!-- Sign Up -->
+            <div class="auth-option">
+              <p class="auth-label">New here?</p>
+              <a href="/signup" class="btn btn-signup">Sign up</a>
+            </div>
+
+            <!-- Sign In -->
+            <div class="auth-option">
+              <p class="auth-label">Existing User?</p>
+              <a href="/signin" class="btn btn-signin">Sign in</a>
+            </div>
+          </div>
+
+          <div class="or-separator">
+            <span>OR</span>
+          </div>
+
+          <div id="googleBtn" class="google-button"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="./src/api/googleAuth.js"></script>
-  <script>
-    const toggleBtn = document.getElementById('themeToggle');
-    const moonIcon = document.getElementById('moonIcon');
-    const sunIcon = document.getElementById('sunIcon');
+    <script type="module" src="./src/api/googleAuth.js"></script>
+    <script>
+      const toggleBtn = document.getElementById("themeToggle");
+      const moonIcon = document.getElementById("moonIcon");
+      const sunIcon = document.getElementById("sunIcon");
 
-    const savedTheme = localStorage.getItem('theme');
+      const savedTheme = localStorage.getItem("theme");
 
-    if(savedTheme === 'light'){
-      document.body.classList.add('light-mode');
-      moonIcon.style.display = "none";
-      sunIcon.style.display = "block";
-    }
-
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-
-      const isLight = document.body.classList.contains('light-mode');
-
-      if(isLight){
+      if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
         moonIcon.style.display = "none";
         sunIcon.style.display = "block";
-        localStorage.setItem('theme', 'light');
-      } else {
-        moonIcon.style.display = "block";
-        sunIcon.style.display = "none";
-        localStorage.setItem('theme', 'dark');
       }
-    });
-  </script>
-</body>
+
+      toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("light-mode");
+
+        const isLight = document.body.classList.contains("light-mode");
+
+        if (isLight) {
+          moonIcon.style.display = "none";
+          sunIcon.style.display = "block";
+          localStorage.setItem("theme", "light");
+        } else {
+          moonIcon.style.display = "block";
+          sunIcon.style.display = "none";
+          localStorage.setItem("theme", "dark");
+        }
+      });
+    </script>
+  </body>
 </html>

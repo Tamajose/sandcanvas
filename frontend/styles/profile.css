@@ -313,20 +313,10 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-.modal-btn.primary {
-  background: #f2d08d;
-  color: #1a1a1a;
-}
-.modal-btn.danger {
-  background: rgba(255, 68, 68, 0.1);
-  color: #ff4444;
-  border: 1px solid #ff4444;
-}
-.modal-btn.secondary {
   background: rgba(255, 255, 255, 0.05);
   color: #888;
 }
+
 .modal-btn:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
@@ -751,4 +741,153 @@ body {
   color: #f5deb3;
   text-decoration: none;
   cursor: pointer;
+}
+
+body.light-mode {
+  background: #fff7e0;
+  color: #0a2e44;
+}
+
+body.light-mode .top-navbar {
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(10, 46, 68, 0.1);
+}
+body.light-mode .navbar-title {
+  color: #0a2e44;
+  text-shadow: none;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #f5deb3;
+  transition: all 0.3s ease;
+  margin-right: 15px;
+}
+
+body.light-mode .theme-toggle {
+  border: 1px solid #0a2e44;
+  color: #0a2e44;
+}
+
+body.light-mode .btn-signout {
+  background: #ffffff;
+  color: #0a2e44;
+  border: 1px solid #0a2e44;
+}
+
+body.light-mode .sidebar {
+  background: rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+body.light-mode .sidebar-item {
+  color: rgba(10, 46, 68, 0.6);
+}
+
+body.light-mode .sidebar-item:hover {
+  background: rgba(10, 46, 68, 0.05);
+  color: #0a2e44;
+}
+
+body.light-mode .sidebar-item.active {
+  background: rgba(10, 46, 68, 0.1);
+  color: #0a2e44;
+  border-left-color: #0a2e44;
+}
+
+body.light-mode .hero-title,
+body.light-mode .empty-message,
+body.light-mode .profile-user-name,
+body.light-mode .detail-value {
+  color: #0a2e44;
+  text-shadow: none;
+}
+
+body.light-mode .empty-subtitle,
+body.light-mode .detail-label,
+body.light-mode .sort-wrapper label {
+  color: rgba(10, 46, 68, 0.6);
+}
+body.light-mode .empty-icon {
+  color: rgba(10, 46, 68, 0.2);
+}
+
+body.light-mode .profile-details-card,
+body.light-mode .options-modal {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 68, 0.1);
+  box-shadow: 0 4px 12px rgba(10, 46, 68, 0.05);
+}
+
+body.light-mode .options-modal h3 {
+  color: #0a2e44;
+}
+
+body.light-mode .placeholder-svg {
+  background: rgba(10, 46, 68, 0.05);
+  color: rgba(10, 46, 68, 0.1);
+}
+
+body.light-mode .hero-section {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 68, 0.1);
+  box-shadow: 0 4px 15px rgba(10, 46, 68, 0.03);
+}
+
+body.light-mode .hero-section::before {
+  display: none;
+}
+
+body.light-mode .hero-title {
+  color: #0a2e44;
+  text-shadow: none;
+}
+
+body.light-mode .art-item {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+body.light-mode .art-creator {
+  color: #0a2e44;
+}
+
+body.light-mode .art-likes {
+  color: rgba(10, 46, 68, 0.7);
+}
+
+body.light-mode .sort-select {
+  background: #ffffff;
+  border: 1px solid #0a2e44;
+  color: #0a2e44;
+}
+
+body.light-mode .sort-select:hover {
+  background: rgba(10, 46, 68, 0.05);
+}
+
+body.light-mode .btn-view {
+  background: #ffffff;
+  border: 1px solid #0a2e44;
+  color: #0a2e44;
+}
+
+body.light-mode .btn-view:hover {
+  background: #0a2e44;
+  color: #fff7e0;
+}
+
+body.light-mode .fab {
+  background: #0a2e44;
+  color: #fff7e0;
+  box-shadow: 0 6px 15px rgba(10, 46, 68, 0.3);
+  animation: none;
 }

@@ -14,7 +14,7 @@ const profileAvatar = document.getElementById("profile-avatar-clickable");
 const checkAuth = () => {
   const token = localStorage.getItem("token");
   if (!token || token === "undefined" || token === "null") {
-    window.location.href = "/signin.html";
+    window.location.href = "/signin";
     return false;
   }
   return true;
@@ -81,7 +81,7 @@ const fetchCreations = async () => {
 
     if (response.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/signin.html";
+      window.location.href = "/signin";
       return;
     }
 
@@ -281,5 +281,28 @@ imageModal.addEventListener("click", (e) => {
 const signoutBtn = document.querySelector(".btn-signout");
 signoutBtn.addEventListener("click", () => {
   localStorage.removeItem("token");
-  window.location.href = "/signin.html";
+  window.location.href = "/signin";
+});
+
+const toggleBtn = document.getElementById("themeToggle");
+const moonIcon = document.getElementById("moonIcon");
+const sunIcon = document.getElementById("sunIcon");
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "light") {
+  document.body.classList.add("light-mode");
+  moonIcon.style.display = "none";
+  sunIcon.style.display = "block";
+}
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("light-mode");
+  const isLight = document.body.classList.contains("light-mode");
+  if (isLight) {
+    moonIcon.style.display = "none";
+    sunIcon.style.display = "block";
+    localStorage.setItem("theme", "light");
+  } else {
+    moonIcon.style.display = "block";
+    sunIcon.style.display = "none";
+    localStorage.setItem("theme", "dark");
+  }
 });

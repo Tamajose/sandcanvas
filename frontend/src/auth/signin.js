@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("user", JSON.stringify(response.user));
 
         console.log("Login successful! Redirecting...");
-        window.location.href = "/canvas.html";
+        window.location.href = "/canvas";
       } catch (error) {
         alert(error.message);
       }

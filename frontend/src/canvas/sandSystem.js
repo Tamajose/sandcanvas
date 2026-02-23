@@ -3,6 +3,7 @@ import * as THREE from "three";
 export class SandSystem {
   constructor(scene) {
     this.gridSize = 600;
+    this.isLightMode = false;
 
     this.grid = Array(this.gridSize)
       .fill(0)
@@ -10,7 +11,7 @@ export class SandSystem {
 
     this.geometry = new THREE.BufferGeometry();
     this.material = new THREE.PointsMaterial({
-      size: (2 / this.gridSize) * 1.35,
+      size: (2 / this.gridSize) * 2.5,
       vertexColors: true,
       sizeAttenuation: true,
     });
@@ -94,6 +95,9 @@ export class SandSystem {
 
           const hex = storedValue - 1;
           const base = new THREE.Color(hex);
+          if (this.isLightMode) {
+            base.multiplyScalar(0.5);
+          }
           const c = this.jitterColor(base);
 
           this.colors.push(c.r, c.g, c.b);

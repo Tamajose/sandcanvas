@@ -18,13 +18,17 @@ const applyTheme = (theme) => {
     scene.background = new THREE.Color(0xd3d3cf);
     moonIcon.style.display = "none";
     sunIcon.style.display = "block";
+    if (sandSystem) sandSystem.isLightMode = true;
   } else {
     document.body.classList.remove("light-mode");
     scene.background = new THREE.Color(0x2a2a2a);
     moonIcon.style.display = "block";
     sunIcon.style.display = "none";
+    if (sandSystem) sandSystem.isLightMode = false;
   }
 };
+
+const sandSystem = new SandSystem(scene);
 
 const savedTheme = localStorage.getItem("theme") || "dark";
 applyTheme(savedTheme);
@@ -36,8 +40,6 @@ themeToggle.addEventListener("click", () => {
   localStorage.setItem("theme", currentTheme);
   applyTheme(currentTheme);
 });
-
-const sandSystem = new SandSystem(scene);
 
 let isPouring = false;
 let mouseX = 0;

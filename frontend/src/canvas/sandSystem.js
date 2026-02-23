@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class SandSystem {
   constructor(scene) {
-    this.gridSize = 450;
+    this.gridSize = 600;
 
     this.grid = Array(this.gridSize)
       .fill(0)
@@ -10,8 +10,9 @@ export class SandSystem {
 
     this.geometry = new THREE.BufferGeometry();
     this.material = new THREE.PointsMaterial({
-      size: (2 / this.gridSize) * 2.5,
+      size: (2 / this.gridSize) * 1.35,
       vertexColors: true,
+      sizeAttenuation: true,
     });
 
     this.palette = {
@@ -100,7 +101,13 @@ export class SandSystem {
 
         if (sandType !== 0) {
           const [wx, wy] = this.gridToWorld(x, y);
-          this.positions.push(wx, wy, 0);
+
+          // Use deterministic jitter with tuned depth (0.1) for zero-gap coverage
+          const cellSize = 2 / this.gridSize;
+          const jX = (Math.sin(x * 12.989) + Math.cos(y * 78.233)) * cellSize * 0.1;
+          const jY = (Math.cos(x * 12.989) + Math.sin(y * 78.233)) * cellSize * 0.1;
+
+          this.positions.push(wx + jX, wy + jY, 0);
 
           const base = this.palette[sandType];
           const c = this.jitterColor(base);

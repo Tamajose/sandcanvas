@@ -10,7 +10,9 @@ export function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     preserveDrawingBuffer: true,
+    antialias: true,
   });
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   window.addEventListener("resize", () => {

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { initScene } from "./src/canvas/scene";
 import { startLoop } from "./src/canvas/loop";
 import { SandSystem } from "./src/canvas/sandSystem";
+import GUI from "lil-gui";
 
 const canvas = document.getElementById("sand-canvas");
 
@@ -14,7 +15,7 @@ const sunIcon = document.getElementById("sunIcon");
 const applyTheme = (theme) => {
   if (theme === "light") {
     document.body.classList.add("light-mode");
-    scene.background = new THREE.Color(0xffffff);
+    scene.background = new THREE.Color(0xd3d3cf);
     moonIcon.style.display = "none";
     sunIcon.style.display = "block";
   } else {
@@ -61,20 +62,29 @@ canvas.addEventListener("mousemove", (event) => {
   mouseY = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
 });
 
-let currentColor = 1;
-const MAX_COLOR = 15;
+const guiParams = {
+  color: "#ffff33",
+};
 
-canvas.addEventListener("wheel", (e) => {
+const gui = new GUI({ container: document.body });
+gui.addColor(guiParams, "color").name("Sand Color");
+const guiDom = gui.domElement;
+guiDom.style.position = "absolute";
+guiDom.style.display = "none";
+guiDom.style.zIndex = "1000";
+
+canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
+  guiDom.style.left = `${e.clientX}px`;
+  guiDom.style.top = `${e.clientY}px`;
+  guiDom.style.display = guiDom.style.display === "none" ? "block" : "none";
+});
 
-  if (e.deltaY > 0) {
-    currentColor++;
-  } else {
-    currentColor--;
+canvas.addEventListener("mousedown", (e) => {
+  if (e.button === 0) {
+    guiDom.style.display = "none";
+    isPouring = true;
   }
-
-  if (currentColor < 1) currentColor = MAX_COLOR;
-  if (currentColor > MAX_COLOR) currentColor = 1;
 });
 
 startLoop(scene, camera, renderer, sandSystem, () => {
@@ -85,7 +95,9 @@ startLoop(scene, camera, renderer, sandSystem, () => {
       const r = Math.random() * radius;
       const spawnX = mouseX + Math.cos(angle) * r;
       const spawnY = mouseY + Math.sin(angle) * r;
-      sandSystem.addSand(spawnX, spawnY, currentColor);
+
+      const hexColor = parseInt(guiParams.color.replace("#", "0x"));
+      sandSystem.addSand(spawnX, spawnY, hexColor);
     }
   }
 

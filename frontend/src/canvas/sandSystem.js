@@ -15,24 +15,6 @@ export class SandSystem {
       sizeAttenuation: true,
     });
 
-    this.palette = {
-      1: new THREE.Color(1.0, 0.95, 0.2), // Vibrant Yellow
-      2: new THREE.Color(1.0, 0.0, 0.2), // Neon Red
-      3: new THREE.Color(0.0, 0.8, 1.0), // Electric Blue
-      4: new THREE.Color(0.2, 1.0, 0.2), // Neon Green
-      5: new THREE.Color(1.0, 1.0, 1.0), // Pure White
-      6: new THREE.Color(1.0, 0.5, 0.0), // Bright Orange
-      7: new THREE.Color(0.8, 0.0, 1.0), // Electric Purple
-      8: new THREE.Color(0.0, 0.0, 0.0), // Black
-      9: new THREE.Color(0.0, 1.0, 1.0), // Cyan
-      10: new THREE.Color(1.0, 0.0, 0.6), // Hot Pink
-      11: new THREE.Color(0.5, 1.0, 0.0), // Lime Green
-      12: new THREE.Color(0.5, 0.0, 1.0), // Deep Violet
-      13: new THREE.Color(0.0, 0.8, 0.8), // Bright Teal
-      14: new THREE.Color(1.0, 0.5, 0.5), // Coral
-      15: new THREE.Color(1.0, 0.84, 0.0), // Gold
-    };
-
     this.positions = [];
     this.colors = [];
 
@@ -61,12 +43,12 @@ export class SandSystem {
     };
   }
 
-  addSand(x, y, colorId = 1) {
+  addSand(x, y, colorValue = 0xffff00) {
     const [gx, gy] = this.worldToGrid(x, y);
     if (gx < 0 || gx >= this.gridSize) return;
     if (gy < 0 || gy >= this.gridSize) return;
 
-    if (this.grid[gy][gx] === 0) this.grid[gy][gx] = colorId;
+    if (this.grid[gy][gx] === 0) this.grid[gy][gx] = colorValue + 1;
   }
 
   updatePhysics() {
@@ -97,19 +79,21 @@ export class SandSystem {
 
     for (let y = 0; y < this.gridSize; y++) {
       for (let x = 0; x < this.gridSize; x++) {
-        const sandType = this.grid[y][x];
+        const storedValue = this.grid[y][x];
 
-        if (sandType !== 0) {
+        if (storedValue !== 0) {
           const [wx, wy] = this.gridToWorld(x, y);
 
-          // Use deterministic jitter with tuned depth (0.1) for zero-gap coverage
           const cellSize = 2 / this.gridSize;
-          const jX = (Math.sin(x * 12.989) + Math.cos(y * 78.233)) * cellSize * 0.1;
-          const jY = (Math.cos(x * 12.989) + Math.sin(y * 78.233)) * cellSize * 0.1;
+          const jX =
+            (Math.sin(x * 12.989) + Math.cos(y * 78.233)) * cellSize * 0.1;
+          const jY =
+            (Math.cos(x * 12.989) + Math.sin(y * 78.233)) * cellSize * 0.1;
 
           this.positions.push(wx + jX, wy + jY, 0);
 
-          const base = this.palette[sandType];
+          const hex = storedValue - 1;
+          const base = new THREE.Color(hex);
           const c = this.jitterColor(base);
 
           this.colors.push(c.r, c.g, c.b);

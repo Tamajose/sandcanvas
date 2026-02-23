@@ -750,7 +750,7 @@ body.light-mode {
 
 body.light-mode .top-navbar {
   background: rgba(255, 255, 255, 0.8);
-  border-bottom: 1px solid rgba(10, 46, 68, 0.1);
+  border-bottom: 1px solid rgba(10, 46, 68, 1);
 }
 body.light-mode .navbar-title {
   color: #0a2e44;
@@ -785,7 +785,7 @@ body.light-mode .btn-signout {
 
 body.light-mode .sidebar {
   background: rgba(255, 255, 255, 0.5);
-  border-right: 1px solid rgba(10, 46, 68, 0.1);
+  border-right: 1px solid rgba(10, 46, 68, 1);
 }
 
 body.light-mode .sidebar-item {
@@ -838,7 +838,7 @@ body.light-mode .placeholder-svg {
 
 body.light-mode .hero-section {
   background: #ffffff;
-  border: 1px solid rgba(10, 46, 68, 0.1);
+  border: 1px solid rgba(10, 46, 68, 0.6);
   box-shadow: 0 4px 15px rgba(10, 46, 68, 0.03);
 }
 

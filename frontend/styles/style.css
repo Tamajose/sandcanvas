@@ -179,3 +179,8 @@ body.light-mode #moonIcon {
 body.light-mode #sunIcon {
   display: block !important;
 }
+
+.lil-gui {
+  --width: 200px;
+  user-select: none;
+}

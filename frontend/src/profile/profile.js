@@ -8,8 +8,6 @@ const profileModal = document.getElementById("profile-pic-modal");
 const fileInput = document.getElementById("hidden-file-input");
 const profileAvatar = document.getElementById("profile-avatar-clickable");
 
-// --- FETCH LOGIC ---
-
 // --- AUTH CHECK ---
 const checkAuth = () => {
   const token = localStorage.getItem("token");
@@ -43,7 +41,6 @@ const switchSection = (sectionId) => {
   } else if (sectionId === "creations") {
     fetchCreations();
   } else if (sectionId === "profile") {
-    // Add this
     fetchUserProfile();
   }
 };
@@ -57,13 +54,7 @@ sidebarItems.forEach((item) => {
 
 // --- HOME GALLERY LOGIC ---
 const loadHome = async () => {
-  // Note: Home gallery is currently empty until public backend endpoint is ready
   homeGrid.innerHTML = "";
-
-  // Future implementation:
-  // const response = await fetch("http://localhost:3000/api/creations/public");
-  // const publicData = await response.json();
-  // ... render logic
 };
 
 document.getElementById("sort-select").addEventListener("change", loadHome);
@@ -91,7 +82,6 @@ const fetchCreations = async () => {
     renderCreations(creations);
   } catch (error) {
     console.error("Error fetching creations: ", error);
-    // Silent fail or show mock if requested? For now just keep empty state
     emptyState.style.display = "block";
   }
 };
@@ -262,7 +252,6 @@ document
 
 // --- INITIALIZATION ---
 if (checkAuth()) {
-  // Default to Home page
   switchSection("home");
 }
 

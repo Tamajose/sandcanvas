@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { initScene } from "./src/canvas/scene";
 import { startLoop } from "./src/canvas/loop";
 import { SandSystem } from "./src/canvas/sandSystem";
@@ -5,6 +6,35 @@ import { SandSystem } from "./src/canvas/sandSystem";
 const canvas = document.getElementById("sand-canvas");
 
 const { scene, camera, renderer } = initScene(canvas);
+
+const themeToggle = document.getElementById("themeToggle");
+const moonIcon = document.getElementById("moonIcon");
+const sunIcon = document.getElementById("sunIcon");
+
+const applyTheme = (theme) => {
+  if (theme === "light") {
+    document.body.classList.add("light-mode");
+    scene.background = new THREE.Color(0xffffff);
+    moonIcon.style.display = "none";
+    sunIcon.style.display = "block";
+  } else {
+    document.body.classList.remove("light-mode");
+    scene.background = new THREE.Color(0x2a2a2a);
+    moonIcon.style.display = "block";
+    sunIcon.style.display = "none";
+  }
+};
+
+const savedTheme = localStorage.getItem("theme") || "dark";
+applyTheme(savedTheme);
+
+themeToggle.addEventListener("click", () => {
+  const currentTheme = document.body.classList.contains("light-mode")
+    ? "dark"
+    : "light";
+  localStorage.setItem("theme", currentTheme);
+  applyTheme(currentTheme);
+});
 
 const sandSystem = new SandSystem(scene);
 

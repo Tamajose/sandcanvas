@@ -301,6 +301,12 @@ body {
   color: #f5deb3;
   font-size: 18px;
 }
+
+.sorting-option {
+  background-color: #1a1a1a;
+  padding: 5px;
+}
+
 .modal-btn {
   display: block;
   width: 100%;
@@ -381,6 +387,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
 
 .hero-section::before {

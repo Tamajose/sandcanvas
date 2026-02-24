@@ -65,7 +65,7 @@ canvas.addEventListener("mousemove", (event) => {
 });
 
 const guiParams = {
-  color: "#ffff33",
+  color: "#d8d896",
 };
 
 const gui = new GUI({ container: document.body });

@@ -107,7 +107,12 @@ body {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   transition: all 0.25s ease;
+  border: none;
   border-left: 3px solid transparent;
+  background: none;
+  font-family: inherit;
+  width: 100%;
+  cursor: pointer;
 }
 
 .sidebar-item:hover {
@@ -397,7 +402,7 @@ body {
   right: -10%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(
+  background: linear-gradient(
     circle,
     rgba(242, 208, 141, 0.1) 0%,
     transparent 70%

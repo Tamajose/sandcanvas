@@ -21,9 +21,20 @@ canvas {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  flex-direction: row-reverse;
-  align-items: center;
+  align-items: flex-start;
   z-index: 10;
+}
+
+.ui-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ui-right {
+  display: flex;
+  align-items: center;
 }
 
 /* Reset Button */
@@ -37,6 +48,7 @@ canvas {
   font-family: "Orbitron";
   backdrop-filter: blur(4px);
   transition: all 0.2s;
+  text-transform: none;
 }
 
 .btn-icon:hover {

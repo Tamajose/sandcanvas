@@ -70,3 +70,17 @@ export const deleteCreation = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+export const getAllCreations = async (req, res) => {
+  try {
+    const creations = await Sand.sort({
+      createdAt: -1,
+    });
+    res.status(200).json(creations);
+  } catch (error) {
+    console.error("Get All Creations Error: ", error);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};

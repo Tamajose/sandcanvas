@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class SandSystem {
   constructor(scene) {
-    this.gridSize = 600;
+    this.gridSize = 400;
     this.isLightMode = false;
 
     this.grid = Array(this.gridSize)

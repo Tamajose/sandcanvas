@@ -91,9 +91,9 @@ canvas.addEventListener("mousedown", (e) => {
 
 startLoop(scene, camera, renderer, sandSystem, () => {
   if (isPouring) {
-    for (let i = 0; i < 5; i++) {
-      const radius = 0.02;
-      const angle = Math.random() * Math.PI * 2;
+    for (let i = 0; i < 50; i++) {
+      const radius = 0.05;
+      const angle = Math.random() * Math.PI * 10;
       const r = Math.random() * radius;
       const spawnX = mouseX + Math.cos(angle) * r;
       const spawnY = mouseY + Math.sin(angle) * r;

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import SandCanvas from "./components/SandCanvas";
+import SandCanvas from "./canvas/SandSystem.jsx";
 import Controls from "./components/Controls";
 import ResetModal from "./components/ResetModal";
 

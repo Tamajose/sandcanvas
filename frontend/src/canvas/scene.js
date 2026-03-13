@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-export function initScene(canvas) {
+export function initScene(canvas, bgColor = 0x2a2a2a) {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x2a2a2a);
+  scene.background = new THREE.Color(bgColor);
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
   camera.position.z = 1;

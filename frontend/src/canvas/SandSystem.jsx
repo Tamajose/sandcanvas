@@ -15,7 +15,8 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const { scene, camera, renderer } = initScene(canvas);
+    const initialBg = isLightMode ? 0xfff7e0 : 0x2a2a2a;
+    const { scene, camera, renderer } = initScene(canvas, initialBg);
     const sandSystem = new SandSystem(scene);
     sandSystemRef.current = sandSystem;
 

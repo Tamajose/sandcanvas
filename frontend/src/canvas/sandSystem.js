@@ -21,6 +21,7 @@ export class SandSystem {
 
     this.points = new THREE.Points(this.geometry, this.material);
     this.points.frustumCulled = false;
+    this.scene = scene;
     scene.add(this.points);
   }
 
@@ -75,6 +76,9 @@ export class SandSystem {
   }
 
   update() {
+    if (this.scene) {
+      this.scene.background = new THREE.Color(this.isLightMode ? 0xfff7e0 : 0x2a2a2a);
+    }
     this.positions.length = 0;
     this.colors.length = 0;
 

@@ -5,13 +5,18 @@ const ThemeToggle = ({ style }) => {
     localStorage.getItem("theme") === "light",
   );
 
-  const toggleTheme = () => {
-    const newMode = !isLightMode;
-    setIsLightMode(newMode);
-    localStorage.setItem("theme", newMode ? "light" : "dark");
-    document.body.classList.toggle("light-mode", newMode);
-    // Dispatch event for other components that might need to react (like Canvas)
-    window.dispatchEvent(new Event("themeChange"));
+  const toggleTheme = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setIsLightMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem("theme", newMode ? "light" : "dark");
+      document.body.classList.toggle("light-mode", newMode);
+      window.dispatchEvent(new Event("themeChange"));
+      return newMode;
+    });
   };
 
   useEffect(() => {
@@ -19,7 +24,16 @@ const ThemeToggle = ({ style }) => {
   }, [isLightMode]);
 
   return (
-    <button className="theme-toggle" onClick={toggleTheme} style={style}>
+    <button
+      className="theme-toggle"
+      onPointerDown={toggleTheme}
+      style={{
+        ...style,
+        cursor: "pointer",
+        zIndex: 9999,
+        pointerEvents: "auto",
+      }}
+    >
       {isLightMode ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -12,19 +12,16 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
     const sketch = (p) => {
       let grid;
       let cols, rows;
-      let w = 4; // Cell size (pixels) - matched to optimized version
+      let w = 4;
       let gui;
       let guiParams = { color: "#d8d896" };
       let isLight = isLightMode;
 
-      // Use a flag for pouring
       let isPouring = false;
 
-      // Exact drag logic from HTML version, adapted to run on our custom flag
       const handlePour = (e) => {
         if (!isPouring) return;
 
-        // Calculate true mouse position relative to canvas
         const rect = p.canvas.getBoundingClientRect();
         const clientX = e.clientX ?? (e.touches && e.touches[0].clientX);
         const clientY = e.clientY ?? (e.touches && e.touches[0].clientY);
@@ -40,12 +37,12 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
         let matrix = 7;
         let extent = p.floor(matrix / 2);
 
-        // Safely extract RGB using p5's built-in robust color parser
         let c = p.color(guiParams.color);
         let r_val = p.red(c);
         let g_val = p.green(c);
         let b_val = p.blue(c);
-        let sandState = ((r_val << 16) | (g_val << 8) | b_val | 0xff000000) >>> 0;
+        let sandState =
+          ((r_val << 16) | (g_val << 8) | b_val | 0xff000000) >>> 0;
 
         for (let i = -extent; i <= extent; i++) {
           for (let j = -extent; j <= extent; j++) {
@@ -56,7 +53,6 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
               if (col >= 0 && col < cols && row >= 0 && row < rows) {
                 let index = col + row * cols;
                 if (grid[index] === 0) {
-                  // Save the exact 32-bit color state into the array
                   grid[index] = sandState;
                 }
               }
@@ -65,7 +61,6 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
         }
       };
 
-      // In setup() we will attach the native listeners to ensure they fire
       p.setup = () => {
         let cnv = p.createCanvas(window.innerWidth, window.innerHeight);
         cnv.id("sand-canvas");
@@ -74,7 +69,6 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
         cols = p.floor(p.width / w);
         rows = p.floor(p.height / w);
 
-        // Exact match to optimized version: Uint32Array to hold 24-bit RGB colors
         grid = new Uint32Array(cols * rows);
 
         gui = new GUI({ container: document.body });
@@ -94,13 +88,11 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
             guiDom.style.display === "none" ? "block" : "none";
         });
 
-        // NATIVE MOUSE LISTENERS
         canvasEl.addEventListener("mousedown", (e) => {
           if (e.button === 0) {
-            // Left click
             isPouring = true;
             if (gui && gui.domElement) gui.domElement.style.display = "none";
-            handlePour(e); // Pour once on click
+            handlePour(e);
           }
         });
 
@@ -118,7 +110,7 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
       };
 
       p.draw = () => {
-        isLight = p.customIsLightMode;
+        isLight = document.body.classList.contains("light-mode");
 
         // Logic Update Phase
         let nextGrid = new Uint32Array(cols * rows);
@@ -167,7 +159,6 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
           for (let j = 0; j < rows; j++) {
             let state = grid[i + j * cols];
             if (state > 0) {
-              // Extract original R, G, B colors from our Uint32Array stored state
               let r = (state >>> 16) & 255;
               let g = (state >>> 8) & 255;
               let b = state & 255;
@@ -186,11 +177,9 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
       };
     };
 
-    // Instantiate p5 inside our container Ref!
     p5Instance = new p5(sketch, containerRef.current);
     p5Ref.current = p5Instance;
 
-    // Attach to the onResetRef passed down from CanvasPage.jsx
     if (onResetRef) {
       onResetRef.current = () => {
         if (p5Ref.current && p5Ref.current.resetCanvas) {
@@ -199,20 +188,12 @@ const SandCanvas = ({ isLightMode, onResetRef }) => {
       };
     }
 
-    // Cleanup phase: remove DOM elements when unmounted
     return () => {
       p5Instance.remove();
       const guis = document.querySelectorAll(".lil-gui");
       guis.forEach((gui) => gui.remove());
     };
-  }, []); // Run once on mount
-
-  // Sync React prop changes into the running p5 context
-  useEffect(() => {
-    if (p5Ref.current) {
-      p5Ref.current.customIsLightMode = isLightMode;
-    }
-  }, [isLightMode]);
+  }, []);
 
   return <div ref={containerRef} />;
 };

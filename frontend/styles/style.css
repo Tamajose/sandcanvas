@@ -23,6 +23,7 @@ canvas {
   justify-content: space-between;
   align-items: flex-start;
   z-index: 10;
+  pointer-events: none;
 }
 
 .ui-left {
@@ -35,6 +36,8 @@ canvas {
 .ui-right {
   display: flex;
   align-items: center;
+  pointer-events: auto;
+  z-index: 20;
 }
 
 /* Reset Button */
@@ -49,6 +52,7 @@ canvas {
   backdrop-filter: blur(4px);
   transition: all 0.2s;
   text-transform: none;
+  pointer-events: auto;
 }
 
 .btn-icon:hover {
@@ -60,6 +64,9 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto !important;
+  z-index: 20;
+  cursor: pointer;
 }
 
 #back-btn {
@@ -148,15 +155,17 @@ canvas {
   color: #f5deb3;
   transition: all 0.3s ease;
   margin-right: 15px;
+  pointer-events: auto;
 }
 
 body.light-mode .theme-toggle {
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid #0a2e44;
   color: #0a2e44;
 }
 
 body.light-mode .btn-icon {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   color: #0a2e44;
   border: 1px solid rgba(10, 46, 68, 1);
 }

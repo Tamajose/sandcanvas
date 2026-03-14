@@ -239,7 +239,7 @@ const Profile = () => {
                   <div className="detail-item">
                     <span className="detail-label">Joined</span>
                     <span className="detail-value">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {new Date(user.createdAt).toLocaleDateString("en-GB")}
                     </span>
                   </div>
                 </div>

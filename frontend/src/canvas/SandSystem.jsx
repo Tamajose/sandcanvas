@@ -1,99 +1,220 @@
 import React, { useRef, useEffect } from "react";
-import * as THREE from "three";
-import { initScene } from "../canvas/scene";
-import { startLoop } from "../canvas/loop";
-import { SandSystem } from "../canvas/sandSystem";
+import p5 from "p5";
 import GUI from "lil-gui";
 
 const SandCanvas = ({ isLightMode, onResetRef }) => {
-  const canvasRef = useRef(null);
-  const sandSystemRef = useRef(null);
-  const guiRef = useRef(null);
-  const isPouringRef = useRef(false);
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const guiParams = useRef({ color: "#d8d896" });
+  const containerRef = useRef(null);
+  const p5Ref = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const initialBg = isLightMode ? 0xfff7e0 : 0x2a2a2a;
-    const { scene, camera, renderer } = initScene(canvas, initialBg);
-    const sandSystem = new SandSystem(scene);
-    sandSystemRef.current = sandSystem;
+    let p5Instance;
 
-    // GUI Setup
-    const gui = new GUI({ container: document.body });
-    gui.addColor(guiParams.current, "color").name("Sand Color");
-    const guiDom = gui.domElement;
-    guiDom.style.position = "absolute";
-    guiDom.style.display = "none";
-    guiDom.style.zIndex = "1000";
-    guiRef.current = gui;
+    const sketch = (p) => {
+      let grid;
+      let cols, rows;
+      let w = 4; // Cell size (pixels) - matched to optimized version
+      let gui;
+      let guiParams = { color: "#d8d896" };
+      let isLight = isLightMode;
 
-    const handleMouseDown = (e) => {
-      if (e.button === 0) {
-        guiDom.style.display = "none";
-        isPouringRef.current = true;
-      }
-    };
+      // Use a flag for pouring
+      let isPouring = false;
 
-    const handleMouseUp = () => (isPouringRef.current = false);
-    const handleMouseLeave = () => (isPouringRef.current = false);
-    const handleMouseMove = (event) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      mouseRef.current.y = -(
-        ((event.clientY - rect.top) / rect.height) * 2 -
-        1
-      );
-    };
-    const handleContextMenu = (e) => {
-      e.preventDefault();
-      guiDom.style.left = `${e.clientX}px`;
-      guiDom.style.top = `${e.clientY}px`;
-      guiDom.style.display = guiDom.style.display === "none" ? "block" : "none";
-    };
+      // Exact drag logic from HTML version, adapted to run on our custom flag
+      const handlePour = (e) => {
+        if (!isPouring) return;
 
-    canvas.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("contextmenu", handleContextMenu);
+        // Calculate true mouse position relative to canvas
+        const rect = p.canvas.getBoundingClientRect();
+        const clientX = e.clientX ?? (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY ?? (e.touches && e.touches[0].clientY);
 
-    startLoop(scene, camera, renderer, sandSystem, () => {
-      if (isPouringRef.current) {
-        for (let i = 0; i < 50; i++) {
-          const radius = 0.05;
-          const angle = Math.random() * Math.PI * 10;
-          const r = Math.random() * radius;
-          const spawnX = mouseRef.current.x + Math.cos(angle) * r;
-          const spawnY = mouseRef.current.y + Math.sin(angle) * r;
-          const hexColor = parseInt(guiParams.current.color.replace("#", "0x"));
-          sandSystem.addSand(spawnX, spawnY, hexColor);
+        if (clientX === undefined) return;
+
+        let mouseX = clientX - rect.left;
+        let mouseY = clientY - rect.top;
+
+        let mouseCol = p.floor(mouseX / w);
+        let mouseRow = p.floor(mouseY / w);
+
+        let matrix = 7;
+        let extent = p.floor(matrix / 2);
+
+        // Safely extract RGB using p5's built-in robust color parser
+        let c = p.color(guiParams.color);
+        let r_val = p.red(c);
+        let g_val = p.green(c);
+        let b_val = p.blue(c);
+        let sandState = ((r_val << 16) | (g_val << 8) | b_val | 0xff000000) >>> 0;
+
+        for (let i = -extent; i <= extent; i++) {
+          for (let j = -extent; j <= extent; j++) {
+            if (p.random(1) < 0.75) {
+              let col = mouseCol + i;
+              let row = mouseRow + j;
+
+              if (col >= 0 && col < cols && row >= 0 && row < rows) {
+                let index = col + row * cols;
+                if (grid[index] === 0) {
+                  // Save the exact 32-bit color state into the array
+                  grid[index] = sandState;
+                }
+              }
+            }
+          }
         }
-      }
-      sandSystem.updatePhysics();
-      sandSystem.update();
-    });
+      };
 
-    onResetRef.current = () => sandSystem.reset();
+      // In setup() we will attach the native listeners to ensure they fire
+      p.setup = () => {
+        let cnv = p.createCanvas(window.innerWidth, window.innerHeight);
+        cnv.id("sand-canvas");
+        p.pixelDensity(1);
 
-    return () => {
-      canvas.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-      canvas.removeEventListener("mouseleave", handleMouseLeave);
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("contextmenu", handleContextMenu);
-      gui.destroy();
+        cols = p.floor(p.width / w);
+        rows = p.floor(p.height / w);
+
+        // Exact match to optimized version: Uint32Array to hold 24-bit RGB colors
+        grid = new Uint32Array(cols * rows);
+
+        gui = new GUI({ container: document.body });
+        gui.addColor(guiParams, "color").name("Sand Color");
+        const guiDom = gui.domElement;
+        guiDom.style.position = "absolute";
+        guiDom.style.display = "none";
+        guiDom.style.zIndex = "1000";
+
+        const canvasEl = cnv.elt;
+
+        canvasEl.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          guiDom.style.left = `${e.clientX}px`;
+          guiDom.style.top = `${e.clientY}px`;
+          guiDom.style.display =
+            guiDom.style.display === "none" ? "block" : "none";
+        });
+
+        // NATIVE MOUSE LISTENERS
+        canvasEl.addEventListener("mousedown", (e) => {
+          if (e.button === 0) {
+            // Left click
+            isPouring = true;
+            if (gui && gui.domElement) gui.domElement.style.display = "none";
+            handlePour(e); // Pour once on click
+          }
+        });
+
+        window.addEventListener("mouseup", () => {
+          isPouring = false;
+        });
+
+        canvasEl.addEventListener("mousemove", (e) => {
+          handlePour(e);
+        });
+
+        p.resetCanvas = () => {
+          grid = new Uint32Array(cols * rows);
+        };
+      };
+
+      p.draw = () => {
+        isLight = p.customIsLightMode;
+
+        // Logic Update Phase
+        let nextGrid = new Uint32Array(cols * rows);
+
+        for (let i = 0; i < cols; i++) {
+          for (let j = rows - 1; j >= 0; j--) {
+            let index = i + j * cols;
+            let state = grid[index];
+
+            if (state > 0) {
+              let below = i + (j + 1) * cols;
+              let dir = p.random(1) < 0.5 ? 1 : -1;
+              let belowA = i + dir + (j + 1) * cols;
+              let belowB = i - dir + (j + 1) * cols;
+
+              if (j === rows - 1) {
+                nextGrid[index] = state;
+              } else if (nextGrid[below] === 0 && grid[below] === 0) {
+                nextGrid[below] = state;
+              } else if (
+                i + dir >= 0 &&
+                i + dir < cols &&
+                nextGrid[belowA] === 0 &&
+                grid[belowA] === 0
+              ) {
+                nextGrid[belowA] = state;
+              } else if (
+                i - dir >= 0 &&
+                i - dir < cols &&
+                nextGrid[belowB] === 0 &&
+                grid[belowB] === 0
+              ) {
+                nextGrid[belowB] = state;
+              } else {
+                nextGrid[index] = state;
+              }
+            }
+          }
+        }
+        grid = nextGrid;
+
+        // Render Phase
+        p.background(isLight ? "#fff7e0" : "#2a2a2a");
+        p.noStroke();
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            let state = grid[i + j * cols];
+            if (state > 0) {
+              // Extract original R, G, B colors from our Uint32Array stored state
+              let r = (state >>> 16) & 255;
+              let g = (state >>> 8) & 255;
+              let b = state & 255;
+              p.fill(r, g, b);
+              p.square(i * w, j * w, w);
+            }
+          }
+        }
+      };
+
+      p.windowResized = () => {
+        p.resizeCanvas(window.innerWidth, window.innerHeight);
+        cols = p.floor(p.width / w);
+        rows = p.floor(p.height / w);
+        grid = new Uint32Array(cols * rows);
+      };
     };
-  }, []);
 
+    // Instantiate p5 inside our container Ref!
+    p5Instance = new p5(sketch, containerRef.current);
+    p5Ref.current = p5Instance;
+
+    // Attach to the onResetRef passed down from CanvasPage.jsx
+    if (onResetRef) {
+      onResetRef.current = () => {
+        if (p5Ref.current && p5Ref.current.resetCanvas) {
+          p5Ref.current.resetCanvas();
+        }
+      };
+    }
+
+    // Cleanup phase: remove DOM elements when unmounted
+    return () => {
+      p5Instance.remove();
+      const guis = document.querySelectorAll(".lil-gui");
+      guis.forEach((gui) => gui.remove());
+    };
+  }, []); // Run once on mount
+
+  // Sync React prop changes into the running p5 context
   useEffect(() => {
-    if (sandSystemRef.current) {
-      sandSystemRef.current.isLightMode = isLightMode;
+    if (p5Ref.current) {
+      p5Ref.current.customIsLightMode = isLightMode;
     }
   }, [isLightMode]);
 
-  return <canvas ref={canvasRef} id="sand-canvas" />;
+  return <div ref={containerRef} />;
 };
 
 export default SandCanvas;

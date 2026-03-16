@@ -107,7 +107,9 @@ canvas {
 }
 .modal-content p {
   color: #aaa;
+  margin-top: 5px;
   margin-bottom: 25px;
+  font-size: 10px;
 }
 
 /* Modal Buttons */

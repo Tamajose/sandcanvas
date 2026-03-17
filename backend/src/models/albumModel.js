@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const albumSchema = new mongoose.Schema({
         userID: {
-            type: mongoose.Schema.Types.Array.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },

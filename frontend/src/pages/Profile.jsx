@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import ThemeToggle from "../components/ThemeToggle";
 import "../../styles/profile.css";
+import { getAlbums, createAlbum, deleteAlbum } from "../api/album"
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -10,6 +11,9 @@ const Profile = () => {
   const [creations, setCreations] = useState([]);
   const [isPicModalOpen, setIsPicModalOpen] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
+  const [albums, setAlbums] = useState([]);
+  const [newAlbumName, setNewAlbumName] = useState("");
+
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -24,10 +28,16 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (checkAuth()) {
-      fetchUserProfile();
-      if (activeSection === "creations") fetchCreations();
-    }
+    if (!checkAuth())
+      return;
+
+    fetchUserProfile();
+    if(activeSection === "creations")
+      fetchCreations();
+
+    if(activeSection === "albums")
+      fetchAlbums();
+    
   }, [activeSection]);
 
   const fetchUserProfile = async () => {
@@ -58,6 +68,15 @@ const Profile = () => {
       setCreations(data);
     } catch (error) {
       console.error("Error fetching creations:", error);
+    }
+  };
+
+  const fetchAlbums = async () => {
+    try{
+      const data = await getAlbums();
+      setAlbums(data);
+    } catch(error){
+      console.error("Error Fetching albums: ", error);
     }
   };
 
@@ -119,6 +138,19 @@ const Profile = () => {
       }
     } catch (err) {
       alert("Delete failed");
+    }
+  };
+
+  const handleCreateAlbum = async () => {
+    if(!newAlbumName.trim())
+      return;
+
+    try{
+      await createAlbum(newAlbumName);
+      setNewAlbumName("");
+      fetchAlbums();
+    } catch(error){
+      alert("Failed to create album");
     }
   };
 
@@ -196,6 +228,43 @@ const Profile = () => {
                         }}
                       >
                         &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {activeSection === "albums" && (
+            <section className="content-section">
+              <h2>Your Albums</h2>
+
+              <div style={{ marginBottom: "20px" }}>
+                <input
+                  type="text"
+                  placeholder="New album name"
+                  value={newAlbumName}
+                  onChange={(e) => setNewAlbumName(e.target.value)}
+                />
+                <button onClick={handleCreateAlbum}>
+                  Create Album
+                </button>
+              </div>
+
+              {albums.length === 0 ? (
+                <p>No albums yet</p>
+              ) : (
+                <div className="albums-grid">
+                  {albums.map((album) => (
+                    <div key={album._id} className="album-card">
+                      <h3>{album.name}</h3>
+                      <p>{album.images.length} images</p>
+
+                      <button
+                        onClick={() => deleteAlbum(album._id).then(fetchAlbums)}
+                      >
+                        Delete
                       </button>
                     </div>
                   ))}

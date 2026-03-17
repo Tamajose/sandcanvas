@@ -118,7 +118,9 @@ export const googleLogin = async (req, res) => {
     } else {
       if (!user.name) user.name = name;
       if (!user.profileImage?.url) {
-        user.profileImage = { url: picture, publicId: "" };
+        user.profileImage = {
+          url: picture, publicId: ""
+        };
       }
       await user.save();
     }

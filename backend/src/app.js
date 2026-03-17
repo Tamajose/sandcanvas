@@ -3,6 +3,7 @@ import cors from "cors";
 import sandRoutes from "./routes/sandRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import albumRoutes from "./routes/albumRoutes.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/creations", sandRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/albums", albumRoutes);
 
 //Check
 app.get("/check", (req, res) => {

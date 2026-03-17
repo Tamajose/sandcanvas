@@ -5,7 +5,9 @@ import fs from "fs";
 export const updateProfilePicture = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded!" });
+      return res.status(400).json({
+        message: "No file uploaded!"
+      });
     }
 
     let profileImageData = null;
@@ -46,7 +48,9 @@ export const updateProfilePicture = async (req, res) => {
     });
   } catch (error) {
     console.error("Update Profile Picture Error:", error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({
+      message: "Server Error"
+    });
   }
 };
 
@@ -54,7 +58,9 @@ export const removeProfilePicture = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user || !user.profileImage?.publicId) {
-      return res.status(400).json({ message: "No profile picture to remove" });
+      return res.status(400).json({
+        message: "No profile picture to remove"
+      });
     }
     await cloudinary.uploader.destroy(user.profileImage.publicId);
 
@@ -71,6 +77,8 @@ export const removeProfilePicture = async (req, res) => {
     });
   } catch (error) {
     console.error("Remove Profile Picture Error:", error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ 
+      message: "Server Error" 
+    });
   }
 };

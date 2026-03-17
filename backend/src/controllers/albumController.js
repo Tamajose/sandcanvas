@@ -14,7 +14,7 @@ export const createAlbum = async (req, res) => {
         const album = await Album.create({
             userID: req.user._id,
             name,
-            image: [],
+            images: [],
         });
 
         res.status(201).json({
@@ -60,7 +60,7 @@ export const addImageToAlbum = async (req, res) => {
             });
         }
 
-        const sand = await Album.findById(sandId);
+        const sand = await Sand.findById(sandId);
 
         if(!sand){
             return res.status(404).json({
@@ -123,9 +123,10 @@ export const removeImageFromAlbum = async(req, res) => {
 };
 
 export const renameAlbum = async(req, res) => {
+    const { name } = req.body;
+    const albumId = req.params.id;
+
     try{
-        const { albumId, name } = req.body;
-        
         const album = await Album.findById(albumId);
 
         if(!album){

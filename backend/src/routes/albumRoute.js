@@ -17,7 +17,7 @@ router.get("/", protect, getUserAlbums);
 router.post("/add-image", protect, addImageToAlbum);
 router.post("/remove-image", protect, removeImageFromAlbum);
 
-router.put("/rename", protect, renameAlbum);
+router.put("/:id", protect, renameAlbum);
 
 router.delete("/:id", protect, deleteAlbum);
 

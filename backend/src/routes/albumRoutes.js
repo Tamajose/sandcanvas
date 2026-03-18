@@ -4,7 +4,7 @@ import {
   getUserAlbums,
   addImageToAlbum,
   removeImageFromAlbum,
-  renameAlbum,
+  updateAlbum,
   deleteAlbum,
 } from "../controllers/albumController.js";
 import { protect } from "../middleware/authMiddleware.js";
@@ -17,7 +17,7 @@ router.get("/", protect, getUserAlbums);
 router.post("/add-image", protect, addImageToAlbum);
 router.post("/remove-image", protect, removeImageFromAlbum);
 
-router.put("/:id", protect, renameAlbum);
+router.put("/:id", protect, updateAlbum);
 
 router.delete("/:id", protect, deleteAlbum);
 

@@ -10,11 +10,32 @@ export const saveCanvas = async (req, res) => {
       });
     }
 
+    const { isPublic, tags } = req.body;
+    let parsedTags = [];
+    if (tags) {
+      if (typeof tags === 'string') {
+        try {
+          parsedTags = JSON.parse(tags);
+        } catch(e) {
+          parsedTags = tags.split(',').map(t => t.trim());
+        }
+      } else if (Array.isArray(tags)) {
+        parsedTags = tags;
+      }
+    }
+    
+    let isPublicBool = true;
+    if (isPublic !== undefined) {
+      isPublicBool = isPublic === 'true' || isPublic === true;
+    }
+
     const imagePath = `/uploads/${req.file.filename}`;
 
     const sand = await Sand.create({
       userID: req.user._id,
       imagePath,
+      isPublic: isPublicBool,
+      tags: parsedTags,
     });
 
     res.status(201).json({
@@ -73,7 +94,7 @@ export const deleteCreation = async (req, res) => {
 
 export const getAllCreations = async (req, res) => {
   try {
-    const creations = await Sand.sort({
+    const creations = await Sand.find({ isPublic: { $ne: false } }).sort({
       createdAt: -1,
     });
     res.status(200).json(creations);
@@ -81,6 +102,49 @@ export const getAllCreations = async (req, res) => {
     console.error("Get All Creations Error: ", error);
     res.status(500).json({
       message: "Server Error",
+    });
+  }
+};
+
+export const updateCreation = async (req, res) => {
+  try {
+    const { isPublic, tags } = req.body;
+    const creation = await Sand.findById(req.params.id);
+
+    if(!creation){
+      return res.status(404).json({
+        message: "Creation not found"
+      });
+    }
+
+    if(creation.userID.toString() !== req.user._id.toString()){
+      return res.status(401).json({
+        message: "Not authorized"
+      });
+    }
+
+    if(isPublic !== undefined){
+      creation.isPublic = isPublic === 'true' || isPublic === true;
+    }
+    
+    if(tags !== undefined){
+      let parsedTags = tags;
+      if(typeof tags === 'string'){
+        try{
+          parsedTags = JSON.parse(tags);
+        } catch(e){
+          parsedTags = tags.split(',').map(t => t.trim());
+        }
+      }
+      creation.tags = parsedTags;
+    }
+
+    await creation.save();
+    res.status(200).json({ message: "Creation updated", creation });
+  } catch (error){
+    console.error("Update Creation Error: ", error);
+    res.status(500).json({
+      message: "Server Error"
     });
   }
 };

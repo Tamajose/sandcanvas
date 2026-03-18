@@ -3,7 +3,7 @@ import Sand from "../models/sandModel.js"
 
 export const createAlbum = async (req, res) => {
     try{
-        const { name } = req.body;
+        const { name, isPublic, tags } = req.body;
 
         if(!name){
             return res.status(400).json({
@@ -15,6 +15,8 @@ export const createAlbum = async (req, res) => {
             userID: req.user._id,
             name,
             images: [],
+            isPublic: isPublic !== undefined ? isPublic : true,
+            tags: tags || [],
         });
 
         res.status(201).json({
@@ -122,8 +124,8 @@ export const removeImageFromAlbum = async(req, res) => {
     }
 };
 
-export const renameAlbum = async(req, res) => {
-    const { name } = req.body;
+export const updateAlbum = async(req, res) => {
+    const { name, isPublic, tags } = req.body;
     const albumId = req.params.id;
 
     try{
@@ -141,12 +143,17 @@ export const renameAlbum = async(req, res) => {
             });
         }
 
-        album.name = name;
+        if(name !== undefined)
+            album.name = name;
+        if(isPublic !== undefined)
+            album.isPublic = isPublic;
+        if(tags !== undefined)
+            album.tags = tags;
 
         await album.save();
 
         return res.status(200).json({
-            message: "Album renamed",
+            message: "Album updated",
             album,
         });
     } catch(error){

@@ -11,6 +11,16 @@ const sandSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
+    tags: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
   },
   { timestamps: true },
 );

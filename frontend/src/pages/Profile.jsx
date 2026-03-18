@@ -3,16 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import ThemeToggle from "../components/ThemeToggle";
 import "../../styles/profile.css";
-import { getAlbums, createAlbum, deleteAlbum } from "../api/album"
+import { getAlbums, createAlbum, deleteAlbum, renameAlbum, addImageToAlbum, removeImageFromAlbum } from "../api/album"
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [user, setUser] = useState(null);
   const [creations, setCreations] = useState([]);
-  const [isPicModalOpen, setIsPicModalOpen] = useState(false);
-  const [expandedImage, setExpandedImage] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [newAlbumName, setNewAlbumName] = useState("");
+  const [editingAlbumId, setEditingAlbumId] = useState(null);
+  const [newAlbumNameEdit, setNewAlbumNameEdit] = useState("");
+  const [expandedImage, setExpandedImage] = useState(null);
+  const [isPicModalOpen, setIsPicModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedAlbumId, setSelectedAlbumId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -32,7 +36,7 @@ const Profile = () => {
       return;
 
     fetchUserProfile();
-    if(activeSection === "creations")
+    if(activeSection === "creations" || activeSection === "albums")
       fetchCreations();
 
     if(activeSection === "albums")
@@ -150,7 +154,39 @@ const Profile = () => {
       setNewAlbumName("");
       fetchAlbums();
     } catch(error){
-      alert("Failed to create album");
+      alert("Failed to create album: ", error);
+    }
+  };
+
+  const handleRenameAlbum = async (albumId) => {
+    if(!newAlbumNameEdit.trim())
+      return;
+
+    try{
+      await renameAlbum(albumId, newAlbumNameEdit);
+      setEditingAlbumId(null);
+      setNewAlbumNameEdit("");
+      fetchAlbums();
+    } catch(error){
+      alert("Failed to rename album: ", error);
+    }
+  };
+
+  const handleAddImage = async (albumId, sandId) => {
+    try{
+      await addImageToAlbum(albumId, sandId);
+      fetchAlbums();
+    } catch{
+      alert("Failed to add image: ", error);
+    }
+  };
+
+  const handleRemoveImage = async (albumId, sandId) => {
+    try{
+      await removeImageFromAlbum(albumId, sandId);
+      fetchAlbums();
+    } catch(error){
+      alert("Failed to remove image: ", error);
     }
   };
 
@@ -258,14 +294,78 @@ const Profile = () => {
                 <div className="albums-grid">
                   {albums.map((album) => (
                     <div key={album._id} className="album-card">
-                      <h3>{album.name}</h3>
-                      <p>{album.images.length} images</p>
+                      
+                      {editingAlbumId === album._id ? (
+                        <>
+                          <input
+                            type="text"
+                            value={newAlbumNameEdit}
+                            onChange={(e) => setNewAlbumNameEdit(e.target.value)}
+                          />
+                          <button onClick={() => handleRenameAlbum(album._id)}>
+                            Save
+                          </button>
+                          <button onClick={() => setEditingAlbumId(null)}>
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <h3>{album.name}</h3>
+                          <p>{album.images.length} images</p>
+
+                          <button
+                            onClick={() => {
+                              setEditingAlbumId(album._id);
+                              setNewAlbumNameEdit(album.name);
+                            }}
+                          >
+                            Rename
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              deleteAlbum(album._id).then(fetchAlbums)
+                            }
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+
+                      <div className="album-images">
+                        {album.images.length === 0 ? (
+                          <p>No images</p>
+                        ) : (
+                          album.images.map((img) => (
+                            <div key={img._id} className="album-image-item">
+                              <img
+                                src={`${API_URL}${img.imagePath}`}
+                                alt="album"
+                                onClick={() => setExpandedImage(img.imagePath)}
+                              />
+
+                              <button
+                                onClick={() =>
+                                  handleRemoveImage(album._id, img._id)
+                                }
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
 
                       <button
-                        onClick={() => deleteAlbum(album._id).then(fetchAlbums)}
+                        onClick={() => {
+                          setSelectedAlbumId(album._id);
+                          setIsAddModalOpen(true);
+                        }}
                       >
-                        Delete
+                        Add Images
                       </button>
+
                     </div>
                   ))}
                 </div>
@@ -364,6 +464,48 @@ const Profile = () => {
               onClick={() => setIsPicModalOpen(false)}
             >
               Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isAddModalOpen && (
+        <div
+          className="modal-backdrop"
+          style={{ display: "flex" }}
+          onClick={(e) =>
+            e.target === e.currentTarget && setIsAddModalOpen(false)
+          }
+        >
+          <div className="options-modal" style={{ maxWidth: "600px" }}>
+            <h3>Select Images</h3>
+
+            {creations.length === 0 ? (
+              <p>No creations available</p>
+            ) : (
+              <div className="mini-grid">
+                {creations.map((c) => (
+                  <img
+                    key={c._id}
+                    src={`${API_URL}${c.imagePath}`}
+                    alt="creation"
+                    onClick={async () => {
+                      await handleAddImage(selectedAlbumId, c._id);
+                    }}
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      margin: "5px",
+                      cursor: "pointer",
+                      borderRadius: "6px",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            <button onClick={() => setIsAddModalOpen(false)}>
+              Done
             </button>
           </div>
         </div>

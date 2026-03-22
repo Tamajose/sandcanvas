@@ -45,7 +45,7 @@ export const loginUser = async (userData) => {
 export const updateUserProfile = async (userData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await fetch(`${API_URL}/api/users`, {
+    const response = await fetch(`${API_URL}/api/user`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

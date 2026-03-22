@@ -369,6 +369,73 @@ body.light-mode .mini-label {
 body.light-mode .mini-value {
   color: #0a2e44;
 }
+
+/* Bio Section Styles */
+.profile-bio {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 5px 0 10px;
+  text-transform: none; /* Keep natural case */
+  font-family: inherit;
+}
+
+body.light-mode .profile-bio {
+  color: rgba(10, 46, 68, 0.8);
+}
+
+.bio-display-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.edit-bio-btn {
+  background: none;
+  border: none;
+  color: #f5deb3;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.edit-bio-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+body.light-mode .edit-bio-btn {
+  color: #0a2e44;
+}
+
+.edit-bio-container {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bio-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+  text-transform: none;
+  font-size: 14px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
 /* Options Modal Styles */
 .options-modal {
   background: #1a1a1a;

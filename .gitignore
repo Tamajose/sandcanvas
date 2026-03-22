@@ -148,6 +148,4 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-a.sh
-j.sh
-t.sh
+g.sh

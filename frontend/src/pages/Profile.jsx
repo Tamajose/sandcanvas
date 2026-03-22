@@ -29,6 +29,8 @@ const Profile = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState("");
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [newBio, setNewBio] = useState("");
 
   const navigate = useNavigate();
 
@@ -47,8 +49,7 @@ const Profile = () => {
     if (!checkAuth()) return;
 
     fetchUserProfile();
-    if (activeSection === "creations" || activeSection === "albums")
-      fetchCreations();
+    fetchCreations();
 
     if (activeSection === "albums") fetchAlbums();
   }, [activeSection, viewingAlbum]);
@@ -162,10 +163,20 @@ const Profile = () => {
     if (!newName.trim()) return;
     try {
       const data = await updateUserProfile({ name: newName });
-      setUser({ ...user, name: data.user.name });
+      setUser(data.user);
       setIsEditingName(false);
     } catch (error) {
-      alert("Failed to update name");
+      alert("Name update failed");
+    }
+  };
+
+  const handleUpdateBio = async () => {
+    try {
+      const data = await updateUserProfile({ bio: newBio });
+      setUser(data.user);
+      setIsEditingBio(false);
+    } catch (error) {
+      alert("Bio update failed");
     }
   };
 
@@ -630,10 +641,53 @@ const Profile = () => {
                         </button>
                       </div>
                     )}
+
+                    {isEditingBio ? (
+                      <div className="edit-bio-container">
+                        <textarea
+                          className="album-input bio-textarea"
+                          value={newBio}
+                          onChange={(e) => setNewBio(e.target.value)}
+                          autoFocus
+                          placeholder="Tell us about yourself"
+                        />
+                        <div className="edit-actions">
+                          <button
+                            className="btn-album"
+                            onClick={handleUpdateBio}
+                          >
+                            Save Bio
+                          </button>
+                          <button
+                            className="btn-album btn-album-secondary"
+                            onClick={() => setIsEditingBio(false)}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bio-display-container">
+                        <p className="profile-bio">{user.bio || ""}</p>
+                        <button
+                          className="edit-bio-btn"
+                          onClick={() => {
+                            setIsEditingBio(true);
+                            setNewBio(user.bio || "");
+                          }}
+                        >
+                          {user.bio ? "Edit Bio" : "Add Bio"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="profile-details-section">
+                  <div className="mini-detail">
+                    <span className="mini-label">Creations</span>
+                    <span className="mini-value">{creations.length} Total</span>
+                  </div>
                   <div className="mini-detail">
                     <span className="mini-label">Email</span>
                     <span className="mini-value">{user.email}</span>

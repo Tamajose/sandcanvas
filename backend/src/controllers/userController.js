@@ -85,14 +85,19 @@ export const removeProfilePicture = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) {
-      return res.status(400).json({ message: "Name is required" });
+    const { name, bio } = req.body;
+    
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (bio !== undefined) updateData.bio = bio;
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: "No data provided for update" });
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { name },
+      updateData,
       { new: true }
     ).select("-passwordHash");
 

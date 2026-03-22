@@ -1144,7 +1144,7 @@ body.light-mode .album-detail-header {
   border-bottom: 1px solid rgba(10, 46, 68, 0.1);
 }
 
-.back-btn {
+.album-back-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1160,16 +1160,16 @@ body.light-mode .album-detail-header {
   letter-spacing: 1px;
 }
 
-.back-btn:hover {
+.album-back-btn:hover {
   color: #f5deb3;
   transform: translateX(-5px);
 }
 
-body.light-mode .back-btn {
+body.light-mode .album-back-btn {
   color: rgba(10, 46, 68, 0.6);
 }
 
-body.light-mode .back-btn:hover {
+body.light-mode .album-back-btn:hover {
   color: #0a2e44;
 }
 

@@ -473,7 +473,7 @@ const Profile = () => {
                 <div className="album-detail-view">
                   <header className="album-detail-header">
                     <button
-                      className="back-btn"
+                      className="album-back-btn"
                       onClick={() => setViewingAlbum(null)}
                     >
                       <svg

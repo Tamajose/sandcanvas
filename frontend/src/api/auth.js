@@ -41,3 +41,26 @@ export const loginUser = async (userData) => {
     throw error;
   }
 };
+
+export const updateUserProfile = async (userData) => {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await fetch(`${API_URL}/api/users`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Update failed");
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

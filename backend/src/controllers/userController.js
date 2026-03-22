@@ -82,3 +82,26 @@ export const removeProfilePicture = async (req, res) => {
     });
   }
 };
+
+export const updateUser = async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: "Name is required" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { name },
+      { new: true }
+    ).select("-passwordHash");
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update User Error:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};

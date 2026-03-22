@@ -3,7 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import ThemeToggle from "../components/ThemeToggle";
 import "../../styles/profile.css";
-import { getAlbums, createAlbum, deleteAlbum, renameAlbum, addImageToAlbum, removeImageFromAlbum } from "../api/album"
+import {
+  getAlbums,
+  createAlbum,
+  deleteAlbum,
+  renameAlbum,
+  addImageToAlbum,
+  removeImageFromAlbum,
+} from "../api/album";
+import { updateUserProfile } from "../api/auth";
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -19,6 +27,8 @@ const Profile = () => {
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
   const [viewingAlbum, setViewingAlbum] = useState(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newName, setNewName] = useState("");
 
   const navigate = useNavigate();
 
@@ -34,16 +44,13 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (!checkAuth())
-      return;
+    if (!checkAuth()) return;
 
     fetchUserProfile();
-    if(activeSection === "creations" || activeSection === "albums")
+    if (activeSection === "creations" || activeSection === "albums")
       fetchCreations();
 
-    if(activeSection === "albums")
-      fetchAlbums();
-    
+    if (activeSection === "albums") fetchAlbums();
   }, [activeSection, viewingAlbum]);
 
   useEffect(() => {
@@ -82,10 +89,10 @@ const Profile = () => {
   };
 
   const fetchAlbums = async () => {
-    try{
+    try {
       const data = await getAlbums();
       setAlbums(data);
-    } catch(error){
+    } catch (error) {
       console.error("Error Fetching albums: ", error);
     }
   };
@@ -151,58 +158,67 @@ const Profile = () => {
     }
   };
 
-  const handleCreateAlbum = async () => {
-    if(!newAlbumName.trim())
-      return;
+  const handleUpdateName = async () => {
+    if (!newName.trim()) return;
+    try {
+      const data = await updateUserProfile({ name: newName });
+      setUser({ ...user, name: data.user.name });
+      setIsEditingName(false);
+    } catch (error) {
+      alert("Failed to update name");
+    }
+  };
 
-    try{
+  const handleCreateAlbum = async () => {
+    if (!newAlbumName.trim()) return;
+
+    try {
       await createAlbum(newAlbumName);
       setNewAlbumName("");
       setIsCreateModalOpen(false);
       fetchAlbums();
-    } catch(error){
+    } catch (error) {
       alert("Failed to create album: ", error);
     }
   };
 
   const handleRenameAlbum = async (albumId) => {
-    if(!newAlbumNameEdit.trim())
-      return;
+    if (!newAlbumNameEdit.trim()) return;
 
-    try{
+    try {
       await renameAlbum(albumId, newAlbumNameEdit);
       setEditingAlbumId(null);
       setNewAlbumNameEdit("");
       fetchAlbums();
-    } catch(error){
+    } catch (error) {
       alert("Failed to rename album: ", error);
     }
   };
 
   const handleAddImage = async (albumId, sandId) => {
-    try{
+    try {
       await addImageToAlbum(albumId, sandId);
       fetchAlbums();
-      if(viewingAlbum && viewingAlbum._id === albumId) {
+      if (viewingAlbum && viewingAlbum._id === albumId) {
         const updatedAlbums = await getAlbums();
-        const updatedAlbum = updatedAlbums.find(a => a._id === albumId);
+        const updatedAlbum = updatedAlbums.find((a) => a._id === albumId);
         setViewingAlbum(updatedAlbum);
       }
-    } catch(err){
+    } catch (err) {
       alert("Failed to add image: ", err);
     }
   };
 
   const handleRemoveImage = async (albumId, sandId) => {
-    try{
+    try {
       await removeImageFromAlbum(albumId, sandId);
       fetchAlbums();
-      if(viewingAlbum && viewingAlbum._id === albumId) {
+      if (viewingAlbum && viewingAlbum._id === albumId) {
         const updatedAlbums = await getAlbums();
-        const updatedAlbum = updatedAlbums.find(a => a._id === albumId);
+        const updatedAlbum = updatedAlbums.find((a) => a._id === albumId);
         setViewingAlbum(updatedAlbum);
       }
-    } catch(error){
+    } catch (error) {
       alert("Failed to remove image: ", error);
     }
   };
@@ -551,7 +567,7 @@ const Profile = () => {
           {activeSection === "profile" && user && (
             <section id="profile-section" className="content-section">
               <div className="profile-container">
-                <div className="profile-header">
+                <div className="profile-header-new">
                   <div
                     className="avatar-wrapper"
                     onClick={() => setIsPicModalOpen(true)}
@@ -573,16 +589,58 @@ const Profile = () => {
                     )}
                     <div className="avatar-overlay">Change</div>
                   </div>
-                  <h2 className="profile-user-name">{user.name}</h2>
-                </div>
-                <div className="profile-details-card">
-                  <div className="detail-item">
-                    <span className="detail-label">Email</span>
-                    <span className="detail-value">{user.email}</span>
+
+                  <div className="profile-info-main">
+                    {isEditingName ? (
+                      <div className="edit-name-container">
+                        <input
+                          type="text"
+                          className="album-input"
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                          autoFocus
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && handleUpdateName()
+                          }
+                        />
+                        <button
+                          className="btn-album"
+                          onClick={handleUpdateName}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="btn-album btn-album-secondary"
+                          onClick={() => setIsEditingName(false)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="name-display-container">
+                        <h2 className="profile-user-name">{user.name}</h2>
+                        <button
+                          className="edit-profile-btn"
+                          onClick={() => {
+                            setIsEditingName(true);
+                            setNewName(user.name);
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Joined</span>
-                    <span className="detail-value">
+                </div>
+
+                <div className="profile-details-section">
+                  <div className="mini-detail">
+                    <span className="mini-label">Email</span>
+                    <span className="mini-value">{user.email}</span>
+                  </div>
+                  <div className="mini-detail">
+                    <span className="mini-label">Joined</span>
+                    <span className="mini-value">
                       {new Date(user.createdAt).toLocaleDateString("en-GB")}
                     </span>
                   </div>

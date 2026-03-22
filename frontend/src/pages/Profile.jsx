@@ -431,7 +431,7 @@ const Profile = () => {
                           </div>
 
                           <div className="album-images">
-                            {album.images.slice(0, 3).map((img) => (
+                            {album.images.slice(0, 4).map((img) => (
                               <div key={img._id} className="album-image-item">
                                 <img
                                   src={`${API_URL}${img.imagePath}`}
@@ -440,7 +440,7 @@ const Profile = () => {
                               </div>
                             ))}
                             {[
-                              ...Array(Math.max(0, 3 - album.images.length)),
+                              ...Array(Math.max(0, 4 - album.images.length)),
                             ].map((_, i) => (
                               <div
                                 key={`empty-${i}`}

@@ -903,3 +903,227 @@ body.light-mode .fab {
   box-shadow: 0 6px 15px rgba(10, 46, 68, 0.3);
   animation: none;
 }
+
+/* Album Section Styles */
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+
+.album-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.album-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(245, 222, 179, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.album-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.album-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f5deb3;
+  letter-spacing: 1px;
+}
+
+.album-count {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.album-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  aspect-ratio: 16/9;
+}
+
+.album-image-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.album-image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.album-image-item:hover img {
+  transform: scale(1.1);
+}
+
+.remove-img-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 68, 68, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.album-image-item:hover .remove-img-btn {
+  opacity: 1;
+}
+
+.album-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.album-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.album-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #f5f5f5;
+  font-family: "Orbitron", sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.album-input:focus {
+  border-color: #f5deb3;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-album {
+  background: rgba(242, 208, 141, 0.1);
+  border: 1px solid rgba(242, 208, 141, 0.3);
+  color: #f2d08d;
+  padding: 10px 20px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+}
+
+.btn-album:hover {
+  background: #f2d08d;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+}
+
+.btn-album-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-album-danger {
+  color: #ff4444;
+  border-color: rgba(255, 68, 68, 0.3);
+}
+
+.btn-album-danger:hover {
+  background: #ff4444;
+  color: white;
+}
+
+/* Light Mode Overrides for Albums */
+body.light-mode .album-card {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+body.light-mode .album-title {
+  color: #0a2e44;
+}
+
+body.light-mode .album-count {
+  color: rgba(10, 46, 68, 0.6);
+}
+
+body.light-mode .album-input {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 68, 0.2);
+  color: #0a2e44;
+}
+
+body.light-mode .album-input:focus {
+  border-color: #0a2e44;
+}
+
+body.light-mode .btn-album {
+  background: #ffffff;
+  border: 1px solid #0a2e44;
+  color: #0a2e44;
+}
+
+body.light-mode .btn-album:hover {
+  background: #0a2e44;
+  color: #fff7e0;
+}
+
+body.light-mode .btn-album-danger {
+  color: #ff4444;
+  border-color: #ff4444;
+}
+
+body.light-mode .btn-album-danger:hover {
+  background: #ff4444;
+  color: #ffffff;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+}
+
+body.light-mode .mini-grid {
+  background: rgba(10, 46, 68, 0.03);
+}
+

@@ -1127,6 +1127,64 @@ body.light-mode .mini-grid {
   background: rgba(10, 46, 68, 0.03);
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f5deb3;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.light-mode .section-title {
+  color: #0a2e44;
+  text-shadow: none;
+}
+
+.add-album-btn {
+  background: rgba(245, 222, 179, 0.1);
+  border: 1px solid rgba(245, 222, 179, 0.3);
+  color: #f5deb3;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-album-btn:hover {
+  background: #f5deb3;
+  color: #1a1a1a;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(245, 222, 179, 0.3);
+}
+
+.add-album-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+body.light-mode .add-album-btn {
+  background: white;
+  border: 1px solid #0a2e44;
+  color: #0a2e44;
+}
+
+body.light-mode .add-album-btn:hover {
+  background: #0a2e44;
+  color: #fff7e0;
+  box-shadow: 0 4px 15px rgba(10, 46, 68, 0.2);
+}
+
 .album-detail-view {
   animation: fadeIn 0.4s ease-out;
 }

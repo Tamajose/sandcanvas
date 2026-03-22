@@ -17,6 +17,7 @@ const Profile = () => {
   const [isPicModalOpen, setIsPicModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
+  const [viewingAlbum, setViewingAlbum] = useState(null);
 
   const navigate = useNavigate();
 
@@ -42,6 +43,10 @@ const Profile = () => {
     if(activeSection === "albums")
       fetchAlbums();
     
+  }, [activeSection, viewingAlbum]);
+
+  useEffect(() => {
+    setViewingAlbum(null);
   }, [activeSection]);
 
   const fetchUserProfile = async () => {
@@ -176,8 +181,13 @@ const Profile = () => {
     try{
       await addImageToAlbum(albumId, sandId);
       fetchAlbums();
-    } catch{
-      alert("Failed to add image: ", error);
+      if(viewingAlbum && viewingAlbum._id === albumId) {
+        const updatedAlbums = await getAlbums();
+        const updatedAlbum = updatedAlbums.find(a => a._id === albumId);
+        setViewingAlbum(updatedAlbum);
+      }
+    } catch(err){
+      alert("Failed to add image: ", err);
     }
   };
 
@@ -185,6 +195,11 @@ const Profile = () => {
     try{
       await removeImageFromAlbum(albumId, sandId);
       fetchAlbums();
+      if(viewingAlbum && viewingAlbum._id === albumId) {
+        const updatedAlbums = await getAlbums();
+        const updatedAlbum = updatedAlbums.find(a => a._id === albumId);
+        setViewingAlbum(updatedAlbum);
+      }
     } catch(error){
       alert("Failed to remove image: ", error);
     }
@@ -274,173 +289,256 @@ const Profile = () => {
 
           {activeSection === "albums" && (
             <section className="content-section">
-              <div className="hero-section" style={{ marginBottom: "40px" }}>
-                <h2 className="hero-title">Your Albums</h2>
-              </div>
+              {!viewingAlbum ? (
+                <>
+                  <div className="hero-section" style={{ marginBottom: "40px" }}>
+                    <h2 className="hero-title">Your Albums</h2>
+                  </div>
 
-              <div className="album-input-group">
-                <input
-                  type="text"
-                  className="album-input"
-                  placeholder="New album name"
-                  value={newAlbumName}
-                  onChange={(e) => setNewAlbumName(e.target.value)}
-                />
-                <button className="btn-album" onClick={handleCreateAlbum}>
-                  Create Album
-                </button>
-              </div>
+                  <div className="album-input-group">
+                    <input
+                      type="text"
+                      className="album-input"
+                      placeholder="New album name"
+                      value={newAlbumName}
+                      onChange={(e) => setNewAlbumName(e.target.value)}
+                    />
+                    <button className="btn-album" onClick={handleCreateAlbum}>
+                      Create Album
+                    </button>
+                  </div>
 
-              {albums.length === 0 ? (
-                <div className="empty-state">
-                  <svg
-                    className="empty-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                  >
-                    <rect x="3" y="4" width="18" height="16" rx="2" />
-                    <path d="M3 10h18" />
-                  </svg>
-                  <p className="empty-message">No albums yet</p>
-                  <p className="empty-subtitle">
-                    Organize your creations into themed collections.
-                  </p>
-                </div>
-              ) : (
-                <div className="albums-grid">
-                  {albums.map((album) => (
-                    <div key={album._id} className="album-card">
-                      <div className="album-header">
-                        {editingAlbumId === album._id ? (
-                          <div
-                            className="album-input-group"
-                            style={{ marginBottom: 0, width: "100%" }}
+                  {albums.length === 0 ? (
+                    <div className="empty-state">
+                      <svg
+                        className="empty-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                      >
+                        <rect x="3" y="4" width="18" height="16" rx="2" />
+                        <path d="M3 10h18" />
+                      </svg>
+                      <p className="empty-message">No albums yet</p>
+                      <p className="empty-subtitle">
+                        Organize your creations into themed collections.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="albums-grid">
+                      {albums.map((album) => (
+                        <div
+                          key={album._id}
+                          className="album-card"
+                          onClick={() => setViewingAlbum(album)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className="album-header">
+                            {editingAlbumId === album._id ? (
+                              <div
+                                className="album-input-group"
+                                style={{
+                                  marginBottom: 0,
+                                  width: "100%",
+                                  zIndex: 10,
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <input
+                                  type="text"
+                                  className="album-input"
+                                  value={newAlbumNameEdit}
+                                  onChange={(e) =>
+                                    setNewAlbumNameEdit(e.target.value)
+                                  }
+                                  autoFocus
+                                />
+                                <button
+                                  className="btn-album"
+                                  onClick={() => handleRenameAlbum(album._id)}
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  className="btn-album btn-album-secondary"
+                                  onClick={() => setEditingAlbumId(null)}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                <div>
+                                  <h3 className="album-title">{album.name}</h3>
+                                  <span className="album-count">
+                                    {album.images.length} images
+                                  </span>
+                                </div>
+                                <div className="album-actions">
+                                  <button
+                                    className="btn-album btn-album-secondary"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setEditingAlbumId(album._id);
+                                      setNewAlbumNameEdit(album.name);
+                                    }}
+                                    style={{
+                                      padding: "6px 12px",
+                                      fontSize: "10px",
+                                      minWidth: "auto",
+                                    }}
+                                  >
+                                    Rename
+                                  </button>
+                                  <button
+                                    className="btn-album btn-album-danger"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteAlbum(album._id).then(fetchAlbums);
+                                    }}
+                                    style={{
+                                      padding: "6px 12px",
+                                      fontSize: "10px",
+                                      minWidth: "auto",
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+
+                          <div className="album-images">
+                            {album.images.slice(0, 3).map((img) => (
+                              <div key={img._id} className="album-image-item">
+                                <img
+                                  src={`${API_URL}${img.imagePath}`}
+                                  alt="album preview"
+                                />
+                              </div>
+                            ))}
+                            {[
+                              ...Array(Math.max(0, 3 - album.images.length)),
+                            ].map((_, i) => (
+                              <div
+                                key={`empty-${i}`}
+                                className="album-image-item"
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  opacity: 0.3,
+                                }}
+                              >
+                                <svg
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1"
+                                >
+                                  <rect
+                                    x="3"
+                                    y="3"
+                                    width="18"
+                                    height="18"
+                                    rx="2"
+                                  />
+                                  <circle cx="8.5" cy="8.5" r="1.5" />
+                                  <path d="M21 15l-5-5L5 21" />
+                                </svg>
+                              </div>
+                            ))}
+                          </div>
+
+                          <button
+                            className="btn-album"
+                            style={{ width: "100%", marginTop: "10px" }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setViewingAlbum(album);
+                            }}
                           >
-                            <input
-                              type="text"
-                              className="album-input"
-                              value={newAlbumNameEdit}
-                              onChange={(e) =>
-                                setNewAlbumNameEdit(e.target.value)
-                              }
-                              autoFocus
-                            />
-                            <button
-                              className="btn-album"
-                              onClick={() => handleRenameAlbum(album._id)}
-                            >
-                              Save
-                            </button>
-                            <button
-                              className="btn-album btn-album-secondary"
-                              onClick={() => setEditingAlbumId(null)}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <>
-                            <div>
-                              <h3 className="album-title">{album.name}</h3>
-                              <span className="album-count">
-                                {album.images.length} images
-                              </span>
-                            </div>
-                            <div className="album-actions">
-                              <button
-                                className="btn-album btn-album-secondary"
-                                onClick={() => {
-                                  setEditingAlbumId(album._id);
-                                  setNewAlbumNameEdit(album.name);
-                                }}
-                                style={{
-                                  padding: "6px 12px",
-                                  fontSize: "10px",
-                                  minWidth: "auto",
-                                }}
-                              >
-                                Rename
-                              </button>
-                              <button
-                                className="btn-album btn-album-danger"
-                                onClick={() =>
-                                  deleteAlbum(album._id).then(fetchAlbums)
-                                }
-                                style={{
-                                  padding: "6px 12px",
-                                  fontSize: "10px",
-                                  minWidth: "auto",
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
+                            Explore Album
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="album-detail-view">
+                  <header className="album-detail-header">
+                    <button
+                      className="back-btn"
+                      onClick={() => setViewingAlbum(null)}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                      </svg>
+                      <span>Back to Albums</span>
+                    </button>
+                    <h2 className="album-detail-title">{viewingAlbum.name}</h2>
+                    <button
+                      className="btn-album"
+                      onClick={() => {
+                        setSelectedAlbumId(viewingAlbum._id);
+                        setIsAddModalOpen(true);
+                      }}
+                    >
+                      Add Creations
+                    </button>
+                  </header>
 
-                      <div className="album-images">
-                        {album.images.slice(0, 3).map((img) => (
-                          <div key={img._id} className="album-image-item">
-                            <img
-                              src={`${API_URL}${img.imagePath}`}
-                              alt="album preview"
-                              onClick={() => setExpandedImage(img.imagePath)}
-                            />
-                            <button
-                              className="remove-img-btn"
-                              onClick={() =>
-                                handleRemoveImage(album._id, img._id)
-                              }
-                              title="Remove image"
-                            >
-                              &times;
-                            </button>
-                          </div>
-                        ))}
-                        {[...Array(Math.max(0, 3 - album.images.length))].map(
-                          (_, i) => (
-                            <div
-                              key={`empty-${i}`}
-                              className="album-image-item"
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                opacity: 0.3,
-                              }}
-                            >
-                              <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1"
-                              >
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                <path d="M21 15l-5-5L5 21" />
-                              </svg>
-                            </div>
-                          )
-                        )}
-                      </div>
-
+                  {viewingAlbum.images.length === 0 ? (
+                    <div className="empty-state">
+                      <p className="empty-message">This album is empty</p>
                       <button
                         className="btn-album"
-                        style={{ width: "100%", marginTop: "10px" }}
                         onClick={() => {
-                          setSelectedAlbumId(album._id);
+                          setSelectedAlbumId(viewingAlbum._id);
                           setIsAddModalOpen(true);
                         }}
                       >
-                        Manage Images
+                        Add your first creation
                       </button>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="creations-grid">
+                      {viewingAlbum.images.map((img) => (
+                        <div
+                          key={img._id}
+                          className="creation-item"
+                          onClick={() => setExpandedImage(img.imagePath)}
+                        >
+                          <img
+                            src={`${API_URL}${img.imagePath}`}
+                            alt="Sand Creation"
+                          />
+                          <button
+                            className="delete-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveImage(viewingAlbum._id, img._id);
+                            }}
+                            title="Remove from album"
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </section>

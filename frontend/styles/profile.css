@@ -1127,3 +1127,73 @@ body.light-mode .mini-grid {
   background: rgba(10, 46, 68, 0.03);
 }
 
+.album-detail-view {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.album-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .album-detail-header {
+  border-bottom: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Orbitron", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.back-btn:hover {
+  color: #f5deb3;
+  transform: translateX(-5px);
+}
+
+body.light-mode .back-btn {
+  color: rgba(10, 46, 68, 0.6);
+}
+
+body.light-mode .back-btn:hover {
+  color: #0a2e44;
+}
+
+.album-detail-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5deb3;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.light-mode .album-detail-title {
+  color: #0a2e44;
+  text-shadow: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

@@ -274,98 +274,171 @@ const Profile = () => {
 
           {activeSection === "albums" && (
             <section className="content-section">
-              <h2>Your Albums</h2>
+              <div className="hero-section" style={{ marginBottom: "40px" }}>
+                <h2 className="hero-title">Your Albums</h2>
+              </div>
 
-              <div style={{ marginBottom: "20px" }}>
+              <div className="album-input-group">
                 <input
                   type="text"
+                  className="album-input"
                   placeholder="New album name"
                   value={newAlbumName}
                   onChange={(e) => setNewAlbumName(e.target.value)}
                 />
-                <button onClick={handleCreateAlbum}>
+                <button className="btn-album" onClick={handleCreateAlbum}>
                   Create Album
                 </button>
               </div>
 
               {albums.length === 0 ? (
-                <p>No albums yet</p>
+                <div className="empty-state">
+                  <svg
+                    className="empty-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                  >
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <path d="M3 10h18" />
+                  </svg>
+                  <p className="empty-message">No albums yet</p>
+                  <p className="empty-subtitle">
+                    Organize your creations into themed collections.
+                  </p>
+                </div>
               ) : (
                 <div className="albums-grid">
                   {albums.map((album) => (
                     <div key={album._id} className="album-card">
-                      
-                      {editingAlbumId === album._id ? (
-                        <>
-                          <input
-                            type="text"
-                            value={newAlbumNameEdit}
-                            onChange={(e) => setNewAlbumNameEdit(e.target.value)}
-                          />
-                          <button onClick={() => handleRenameAlbum(album._id)}>
-                            Save
-                          </button>
-                          <button onClick={() => setEditingAlbumId(null)}>
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <h3>{album.name}</h3>
-                          <p>{album.images.length} images</p>
-
-                          <button
-                            onClick={() => {
-                              setEditingAlbumId(album._id);
-                              setNewAlbumNameEdit(album.name);
-                            }}
+                      <div className="album-header">
+                        {editingAlbumId === album._id ? (
+                          <div
+                            className="album-input-group"
+                            style={{ marginBottom: 0, width: "100%" }}
                           >
-                            Rename
-                          </button>
-
-                          <button
-                            onClick={() =>
-                              deleteAlbum(album._id).then(fetchAlbums)
-                            }
-                          >
-                            Delete
-                          </button>
-                        </>
-                      )}
-
-                      <div className="album-images">
-                        {album.images.length === 0 ? (
-                          <p>No images</p>
+                            <input
+                              type="text"
+                              className="album-input"
+                              value={newAlbumNameEdit}
+                              onChange={(e) =>
+                                setNewAlbumNameEdit(e.target.value)
+                              }
+                              autoFocus
+                            />
+                            <button
+                              className="btn-album"
+                              onClick={() => handleRenameAlbum(album._id)}
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="btn-album btn-album-secondary"
+                              onClick={() => setEditingAlbumId(null)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         ) : (
-                          album.images.map((img) => (
-                            <div key={img._id} className="album-image-item">
-                              <img
-                                src={`${API_URL}${img.imagePath}`}
-                                alt="album"
-                                onClick={() => setExpandedImage(img.imagePath)}
-                              />
-
+                          <>
+                            <div>
+                              <h3 className="album-title">{album.name}</h3>
+                              <span className="album-count">
+                                {album.images.length} images
+                              </span>
+                            </div>
+                            <div className="album-actions">
                               <button
-                                onClick={() =>
-                                  handleRemoveImage(album._id, img._id)
-                                }
+                                className="btn-album btn-album-secondary"
+                                onClick={() => {
+                                  setEditingAlbumId(album._id);
+                                  setNewAlbumNameEdit(album.name);
+                                }}
+                                style={{
+                                  padding: "6px 12px",
+                                  fontSize: "10px",
+                                  minWidth: "auto",
+                                }}
                               >
-                                Remove
+                                Rename
+                              </button>
+                              <button
+                                className="btn-album btn-album-danger"
+                                onClick={() =>
+                                  deleteAlbum(album._id).then(fetchAlbums)
+                                }
+                                style={{
+                                  padding: "6px 12px",
+                                  fontSize: "10px",
+                                  minWidth: "auto",
+                                }}
+                              >
+                                Delete
                               </button>
                             </div>
-                          ))
+                          </>
+                        )}
+                      </div>
+
+                      <div className="album-images">
+                        {album.images.slice(0, 3).map((img) => (
+                          <div key={img._id} className="album-image-item">
+                            <img
+                              src={`${API_URL}${img.imagePath}`}
+                              alt="album preview"
+                              onClick={() => setExpandedImage(img.imagePath)}
+                            />
+                            <button
+                              className="remove-img-btn"
+                              onClick={() =>
+                                handleRemoveImage(album._id, img._id)
+                              }
+                              title="Remove image"
+                            >
+                              &times;
+                            </button>
+                          </div>
+                        ))}
+                        {[...Array(Math.max(0, 3 - album.images.length))].map(
+                          (_, i) => (
+                            <div
+                              key={`empty-${i}`}
+                              className="album-image-item"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                opacity: 0.3,
+                              }}
+                            >
+                              <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1"
+                              >
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                              </svg>
+                            </div>
+                          )
                         )}
                       </div>
 
                       <button
+                        className="btn-album"
+                        style={{ width: "100%", marginTop: "10px" }}
                         onClick={() => {
                           setSelectedAlbumId(album._id);
                           setIsAddModalOpen(true);
                         }}
                       >
-                        Add Images
+                        Manage Images
                       </button>
-
                     </div>
                   ))}
                 </div>
@@ -504,7 +577,11 @@ const Profile = () => {
               </div>
             )}
 
-            <button onClick={() => setIsAddModalOpen(false)}>
+            <button
+              className="btn-album"
+              style={{ width: "100%", marginTop: "20px" }}
+              onClick={() => setIsAddModalOpen(false)}
+            >
               Done
             </button>
           </div>

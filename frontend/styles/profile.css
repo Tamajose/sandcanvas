@@ -614,7 +614,7 @@ body.light-mode .edit-bio-btn {
 
 .art-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 30px;
 }
 
@@ -686,19 +686,20 @@ body.light-mode .edit-bio-btn {
   background: rgba(242, 208, 141, 0.1);
   border: 1px solid rgba(242, 208, 141, 0.3);
   color: #f2d08d;
-  padding: 6px 16px;
-  border-radius: 14px;
-  font-size: 11px;
-  font-weight: 600;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: "Orbitron", sans-serif;
-  text-transform: uppercase;
+  font-family: inherit;
 }
 
 .btn-view:hover {
   background: #f2d08d;
   color: #1a1a1a;
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {

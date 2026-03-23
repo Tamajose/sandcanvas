@@ -13,6 +13,7 @@ import {
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
 
+// Public creations state for the Home page
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [user, setUser] = useState(null);
@@ -31,6 +32,7 @@ const Profile = () => {
   const [newName, setNewName] = useState("");
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [newBio, setNewBio] = useState("");
+  const [publicCreations, setPublicCreations] = useState([]);
 
   const navigate = useNavigate();
 
@@ -51,6 +53,7 @@ const Profile = () => {
     fetchUserProfile();
     fetchCreations();
 
+    if (activeSection === "home") fetchPublicCreations();
     if (activeSection === "albums") fetchAlbums();
   }, [activeSection, viewingAlbum]);
 
@@ -95,6 +98,23 @@ const Profile = () => {
       setAlbums(data);
     } catch (error) {
       console.error("Error Fetching albums: ", error);
+    }
+  };
+
+  const fetchPublicCreations = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      // Stub for backend team: replace this URL with the actual public creations endpoint
+      // const response = await fetch(`${API_URL}/api/creations/public`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      // const data = await response.json();
+      // setPublicCreations(data);
+      
+      // For now, initializing with empty array as requested to remove mock data
+      setPublicCreations([]);
+    } catch (error) {
+      console.error("Error fetching public creations:", error);
     }
   };
 
@@ -263,7 +283,31 @@ const Profile = () => {
                 <h2 className="hero-title">Explore Sand Creations</h2>
               </div>
               <div id="home-grid" className="art-grid">
-                {/* Home Gallery logic */}
+                {publicCreations.map((art) => (
+                  <div key={art._id} className="art-item">
+                    <div className="art-thumbnail-wrapper">
+                      <img src={art.imagePath?.startsWith("http") ? art.imagePath : `${API_URL}${art.imagePath}`} alt="Sandscape" />
+                    </div>
+                    <div className="art-info">
+                      <div className="art-creator">@{art.creator}</div>
+                      <div className="art-stats">
+                        <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.5)" }}>
+                          {new Date(art.createdAt).toLocaleDateString("en-GB")}
+                        </span>
+                        <button 
+                          className="btn-view"
+                          onClick={() => setExpandedImage(art.imagePath)}
+                          title="View Artwork"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width: "16px", height: "16px"}}>
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           )}
@@ -714,7 +758,7 @@ const Profile = () => {
           <span className="close-modal">&times;</span>
           <img
             className="modal-content-img"
-            src={`${API_URL}${expandedImage}`}
+            src={expandedImage?.startsWith("http") ? expandedImage : `${API_URL}${expandedImage}`}
             alt="Expanded"
           />
         </div>

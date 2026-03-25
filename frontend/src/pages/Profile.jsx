@@ -12,6 +12,7 @@ import {
   removeImageFromAlbum,
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
+import { getAllCreations } from "../api/creations";
 
 // Public creations state for the Home page
 const Profile = () => {
@@ -102,17 +103,9 @@ const Profile = () => {
   };
 
   const fetchPublicCreations = async () => {
-    const token = localStorage.getItem("token");
     try {
-      // Stub for backend team: replace this URL with the actual public creations endpoint
-      // const response = await fetch(`${API_URL}/api/creations/public`, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
-      // const data = await response.json();
-      // setPublicCreations(data);
-      
-      // For now, initializing with empty array as requested to remove mock data
-      setPublicCreations([]);
+      const data = await getAllCreations();
+      setPublicCreations(data);
     } catch (error) {
       console.error("Error fetching public creations:", error);
     }
@@ -280,30 +273,41 @@ const Profile = () => {
           {activeSection === "home" && (
             <section id="home-section" className="content-section">
               <div className="hero-section">
-                <h2 className="hero-title">Explore Sand Creations</h2>
+                <h2 className="hero-title">
+                  Explore Sand Creations by Other Users
+                </h2>
               </div>
               <div id="home-grid" className="art-grid">
                 {publicCreations.map((art) => (
-                  <div key={art._id} className="art-item">
+                  <div
+                    key={art._id}
+                    className="art-item"
+                    onClick={() => setExpandedImage(art.imagePath)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="art-thumbnail-wrapper">
-                      <img src={art.imagePath?.startsWith("http") ? art.imagePath : `${API_URL}${art.imagePath}`} alt="Sandscape" />
+                      <img
+                        src={
+                          art.imagePath?.startsWith("http")
+                            ? art.imagePath
+                            : `${API_URL}${art.imagePath}`
+                        }
+                        alt="Sandscape"
+                      />
                     </div>
                     <div className="art-info">
-                      <div className="art-creator">@{art.creator}</div>
+                      <div className="art-creator">
+                        {art.userID?.name || art.creator || "Unknown"}
+                      </div>
                       <div className="art-stats">
-                        <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.5)" }}>
+                        <span
+                          style={{
+                            fontSize: "12px",
+                            color: "rgba(255, 255, 255, 0.5)",
+                          }}
+                        >
                           {new Date(art.createdAt).toLocaleDateString("en-GB")}
                         </span>
-                        <button 
-                          className="btn-view"
-                          onClick={() => setExpandedImage(art.imagePath)}
-                          title="View Artwork"
-                        >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width: "16px", height: "16px"}}>
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -758,7 +762,11 @@ const Profile = () => {
           <span className="close-modal">&times;</span>
           <img
             className="modal-content-img"
-            src={expandedImage?.startsWith("http") ? expandedImage : `${API_URL}${expandedImage}`}
+            src={
+              expandedImage?.startsWith("http")
+                ? expandedImage
+                : `${API_URL}${expandedImage}`
+            }
             alt="Expanded"
           />
         </div>

@@ -8,11 +8,11 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // user registration
 export const registerUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password || !name) {
       return res.status(400).json({
-        message: "Email and Password required!",
+        message: "Email, Password and Name required!",
       });
     }
 

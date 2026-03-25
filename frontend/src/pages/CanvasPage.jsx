@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import SandCanvas from "../canvas/SandSystem.jsx";
+import { saveCreation } from "../api/creations";
 import Controls from "../components/Controls";
 import ResetModal from "../components/ResetModal";
 import ThemeToggle from "../components/ThemeToggle";
@@ -29,15 +30,10 @@ const CanvasPage = () => {
       if (!token) return alert("No token found!");
 
       try {
-        const response = await fetch("http://localhost:3000/api/creations", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-        if (response.ok) alert("Creation Saved!");
-        else alert("Failed to save");
+        await saveCreation(formData);
+        alert("Creation Saved!");
       } catch (error) {
-        alert("Error saving");
+        alert(error.message || "Error saving");
       }
     });
   };

@@ -94,9 +94,11 @@ export const deleteCreation = async (req, res) => {
 
 export const getAllCreations = async (req, res) => {
   try {
-    const creations = await Sand.find({ isPublic: { $ne: false } }).sort({
-      createdAt: -1,
-    });
+    const creations = await Sand.find({ isPublic: { $ne: false } })
+      .populate("userID", "name")
+      .sort({
+        createdAt: -1,
+      });
     res.status(200).json(creations);
   } catch (error) {
     console.error("Get All Creations Error: ", error);

@@ -1,6 +1,7 @@
 import Sand from "../models/sandModel.js";
 import fs from "fs";
 import path from "path";
+import cloudinary from "../../config/cloudinary.js";
 
 export const saveCanvas = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ export const saveCanvas = async (req, res) => {
       isPublicBool = isPublic === 'true' || isPublic === true;
     }
 
-    const imagePath = `/uploads/${req.file.filename}`;
+    const imagePath = req.file.path; // Cloudinary URL
 
     const sand = await Sand.create({
       userID: req.user._id,
@@ -37,6 +38,8 @@ export const saveCanvas = async (req, res) => {
       isPublic: isPublicBool,
       tags: parsedTags,
     });
+
+    console.log(`Cloudinary Upload Success: Canvas saved to ${imagePath}`);
 
     res.status(201).json({
       message: "Canvas Saved",
@@ -78,9 +81,17 @@ export const deleteCreation = async (req, res) => {
     }
 
     // Delete file
-    const filePath = path.join(process.cwd(), creation.imagePath);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    if (creation.imagePath && creation.imagePath.includes('cloudinary.com')) {
+      const parts = creation.imagePath.split('/');
+      const filename = parts.pop();
+      const publicId = "sandcanvas_creations/" + filename.split('.')[0];
+      await cloudinary.uploader.destroy(publicId);
+      console.log(`Cloudinary Deletion Success: Removed canvas ${publicId}`);
+    } else {
+      const filePath = path.join(process.cwd(), creation.imagePath);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
     }
 
     await creation.deleteOne();

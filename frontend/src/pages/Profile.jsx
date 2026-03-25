@@ -345,7 +345,7 @@ const Profile = () => {
                       onClick={() => setExpandedImage(creation.imagePath)}
                     >
                       <img
-                        src={`${API_URL}${creation.imagePath}`}
+                        src={creation.imagePath?.startsWith("http") ? creation.imagePath : `${API_URL}${creation.imagePath}`}
                         alt="Sand Creation"
                       />
                       <button
@@ -493,7 +493,7 @@ const Profile = () => {
                             {album.images.slice(0, 4).map((img) => (
                               <div key={img._id} className="album-image-item">
                                 <img
-                                  src={`${API_URL}${img.imagePath}`}
+                                  src={img.imagePath?.startsWith("http") ? img.imagePath : `${API_URL}${img.imagePath}`}
                                   alt="album preview"
                                 />
                               </div>
@@ -601,7 +601,7 @@ const Profile = () => {
                           onClick={() => setExpandedImage(img.imagePath)}
                         >
                           <img
-                            src={`${API_URL}${img.imagePath}`}
+                            src={img.imagePath?.startsWith("http") ? img.imagePath : `${API_URL}${img.imagePath}`}
                             alt="Sand Creation"
                           />
                           <button

@@ -10,31 +10,12 @@ export const updateProfilePicture = async (req, res) => {
       });
     }
 
-    let profileImageData = null;
-    try {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "profile_pictures",
-      });
+    const profileImageData = {
+      url: req.file.path,
+      publicId: req.file.filename,
+    };
 
-      console.log("Cloudinary upload success:", result.public_id);
-
-      profileImageData = {
-        url: result.secure_url,
-        publicId: result.public_id,
-      };
-
-      fs.unlinkSync(req.file.path);
-    } catch (uploadError) {
-      console.error("Cloudinary Upload Error:", uploadError);
-      if (fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
-
-      return res.status(500).json({
-        message: "Image upload failed",
-        error: uploadError.message,
-      });
-    }
+    console.log(`Cloudinary Upload Success: Profile Picture saved to ${req.file.path}`);
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
@@ -63,6 +44,7 @@ export const removeProfilePicture = async (req, res) => {
       });
     }
     await cloudinary.uploader.destroy(user.profileImage.publicId);
+    console.log(`Cloudinary Deletion Success: Removed profile picture ${user.profileImage.publicId}`);
 
     user.profileImage = { url: "", publicId: "" };
     await user.save();

@@ -12,7 +12,7 @@ import {
   removeImageFromAlbum,
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
-import { getAllCreations } from "../api/creations";
+import { getAllCreations, toggleLikeCreation } from "../api/creations";
 
 // Public creations state for the Home page
 const Profile = () => {
@@ -108,6 +108,36 @@ const Profile = () => {
       setPublicCreations(data);
     } catch (error) {
       console.error("Error fetching public creations:", error);
+    }
+  };
+
+  const handleLike = async (e, artId) => {
+    e.stopPropagation();
+    
+    const userId = user?._id; 
+    if(!userId) return;
+
+    setPublicCreations((prevCreations) =>
+      prevCreations.map((creation) => {
+        if (creation._id === artId) {
+          const isLiked = creation.likes?.includes(userId);
+          let newLikes = creation.likes ? [...creation.likes] : [];
+          if (isLiked) {
+            newLikes = newLikes.filter((id) => id !== userId);
+          } else {
+            newLikes.push(userId);
+          }
+          return { ...creation, likes: newLikes };
+        }
+        return creation;
+      })
+    );
+
+    try {
+      await toggleLikeCreation(artId);
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
+      fetchPublicCreations(); 
     }
   };
 
@@ -278,7 +308,9 @@ const Profile = () => {
                 </h2>
               </div>
               <div id="home-grid" className="art-grid">
-                {publicCreations.map((art) => (
+                {publicCreations
+                  .filter((art) => (art.userID?._id || art.userID) !== user?._id)
+                  .map((art) => (
                   <div
                     key={art._id}
                     className="art-item"
@@ -299,7 +331,7 @@ const Profile = () => {
                       <div className="art-creator">
                         {art.userID?.name || art.creator || "Unknown"}
                       </div>
-                      <div className="art-stats">
+                      <div className="art-stats" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                         <span
                           style={{
                             fontSize: "12px",
@@ -308,6 +340,33 @@ const Profile = () => {
                         >
                           {new Date(art.createdAt).toLocaleDateString("en-GB")}
                         </span>
+                        
+                        <button
+                          className="btn-like"
+                          onClick={(e) => handleLike(e, art._id)}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: art.likes?.includes(user?._id) ? "#ff4b4b" : "rgba(255, 255, 255, 0.5)",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                            fontSize: "14px",
+                            padding: 0
+                          }}
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill={art.likes?.includes(user?._id) ? "currentColor" : "none"}
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            style={{ width: "16px", height: "16px" }}
+                          >
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                          </svg>
+                          <span>{art.likes?.length || 0}</span>
+                        </button>
                       </div>
                     </div>
                   </div>

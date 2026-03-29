@@ -5,6 +5,7 @@ import {
   deleteCreation,
   getAllCreations,
   updateCreation,
+  toggleLikeCreation,
 } from "../controllers/sandController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import upload from "../middleware/uploadMiddleware.js";
@@ -15,6 +16,7 @@ router.post("/", protect, upload.single("image"), saveCanvas);
 router.get("/", protect, getUserCreations);
 router.delete("/:id", protect, deleteCreation);
 router.put("/:id", protect, updateCreation);
+router.put("/:id/like", protect, toggleLikeCreation);
 router.get("/all", getAllCreations);
 
 export default router;

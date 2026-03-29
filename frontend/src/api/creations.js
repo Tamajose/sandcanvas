@@ -34,3 +34,23 @@ export const saveCreation = async (formData) => {
         throw error;
     }
 };
+
+export const toggleLikeCreation = async (id) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${API_URL}/api/creations/${id}/like`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to toggle like");
+        }
+        return data;
+    } catch (error) {
+        console.error("Toggle Like Error:", error);
+        throw error;
+    }
+};

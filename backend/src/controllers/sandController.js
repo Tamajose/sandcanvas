@@ -161,3 +161,33 @@ export const updateCreation = async (req, res) => {
     });
   }
 };
+
+export const toggleLikeCreation = async (req, res) => {
+  try {
+    const creation = await Sand.findById(req.params.id);
+    if (!creation) {
+      return res.status(404).json({ message: "Creation not found" });
+    }
+
+    const userId = req.user._id;
+    const isLiked = creation.likes.includes(userId);
+
+    if (isLiked) {
+      // Unlike
+      creation.likes = creation.likes.filter(id => id.toString() !== userId.toString());
+    } else {
+      // Like
+      creation.likes.push(userId);
+    }
+
+    await creation.save();
+    
+    res.status(200).json({ 
+      message: isLiked ? "Unliked successfully" : "Liked successfully",
+      likes: creation.likes 
+    });
+  } catch (error) {
+    console.error("Toggle Like Error: ", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};

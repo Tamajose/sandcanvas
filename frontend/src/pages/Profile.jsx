@@ -23,7 +23,7 @@ const Profile = () => {
   const [newAlbumName, setNewAlbumName] = useState("");
   const [editingAlbumId, setEditingAlbumId] = useState(null);
   const [newAlbumNameEdit, setNewAlbumNameEdit] = useState("");
-  const [expandedImage, setExpandedImage] = useState(null);
+  const [expandedCreation, setExpandedCreation] = useState(null);
   const [isPicModalOpen, setIsPicModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
@@ -314,7 +314,7 @@ const Profile = () => {
                   <div
                     key={art._id}
                     className="art-item"
-                    onClick={() => setExpandedImage(art.imagePath)}
+                    onClick={() => setExpandedCreation(art)}
                     style={{ cursor: "pointer" }}
                   >
                     <div className="art-thumbnail-wrapper">
@@ -401,7 +401,7 @@ const Profile = () => {
                     <div
                       key={creation._id}
                       className="creation-item"
-                      onClick={() => setExpandedImage(creation.imagePath)}
+                      onClick={() => setExpandedCreation(creation)}
                     >
                       <img
                         src={creation.imagePath?.startsWith("http") ? creation.imagePath : `${API_URL}${creation.imagePath}`}
@@ -657,7 +657,7 @@ const Profile = () => {
                         <div
                           key={img._id}
                           className="creation-item"
-                          onClick={() => setExpandedImage(img.imagePath)}
+                          onClick={() => setExpandedCreation(img)}
                         >
                           <img
                             src={img.imagePath?.startsWith("http") ? img.imagePath : `${API_URL}${img.imagePath}`}
@@ -812,22 +812,47 @@ const Profile = () => {
         </main>
       </div>
 
-      {expandedImage && (
+      {expandedCreation && (
         <div
           className="modal-backdrop"
           style={{ display: "flex" }}
-          onClick={() => setExpandedImage(null)}
+          onClick={() => setExpandedCreation(null)}
         >
           <span className="close-modal">&times;</span>
-          <img
-            className="modal-content-img"
-            src={
-              expandedImage?.startsWith("http")
-                ? expandedImage
-                : `${API_URL}${expandedImage}`
-            }
-            alt="Expanded"
-          />
+          <div className="expanded-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="expanded-image-wrapper">
+              <img
+                className="expanded-img"
+                src={
+                  expandedCreation.imagePath?.startsWith("http")
+                    ? expandedCreation.imagePath
+                    : `${API_URL}${expandedCreation.imagePath}`
+                }
+                alt="Expanded"
+              />
+            </div>
+            
+            <div className="expanded-info-panel">
+              <h2 className="expanded-title">{expandedCreation.name || "Untitled Creation"}</h2>
+              {expandedCreation.description && (
+                  <p className="expanded-desc">{expandedCreation.description}</p>
+              )}
+              {expandedCreation.tags && expandedCreation.tags.length > 0 && (
+                  <div className="expanded-tags">
+                      {expandedCreation.tags.map((tag, idx) => (
+                          <span key={idx} className="expanded-tag">
+                              #{tag}
+                          </span>
+                      ))}
+                  </div>
+              )}
+              <div className="expanded-meta">
+                {expandedCreation.createdAt && (
+                  <span>Created: {new Date(expandedCreation.createdAt).toLocaleDateString("en-GB")}</span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

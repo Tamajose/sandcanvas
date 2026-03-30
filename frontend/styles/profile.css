@@ -874,13 +874,86 @@ body.light-mode .edit-bio-btn {
   align-items: center;
 }
 
-.modal-content-img {
-  margin: auto;
-  display: block;
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 8px;
-  box-shadow: 0 0 20px rgba(245, 222, 179, 0.2);
+/* Expanded Modal Styles */
+.expanded-modal-container {
+  display: flex;
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 1400px;
+  width: 95%;
+  max-height: 92vh;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(245, 222, 179, 0.2);
+}
+
+.expanded-image-wrapper {
+  flex: 2;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.expanded-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-height: 90vh;
+}
+
+.expanded-info-panel {
+  flex: 1;
+  padding: 45px;
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+  color: white;
+  min-width: 350px;
+  overflow-y: auto;
+}
+
+.expanded-title {
+  font-size: 28px;
+  color: #f5deb3;
+  margin-bottom: 25px;
+  font-weight: 700;
+  word-wrap: break-word;
+  letter-spacing: 1px;
+}
+
+.expanded-desc {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  margin-bottom: 30px;
+  font-family: inherit;
+  text-transform: none;
+  white-space: pre-wrap;
+}
+
+.expanded-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.expanded-tag {
+  background: rgba(245, 222, 179, 0.1);
+  color: #f5deb3;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  text-transform: lowercase;
+}
+
+.expanded-meta {
+  margin-top: auto;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
 }
 
 .close-modal {
@@ -1403,4 +1476,45 @@ body.light-mode .album-detail-title {
     transform: translateY(0);
   }
 }
+
+/* Light Mode Overrides for Expanded Modal */
+body.light-mode .expanded-modal-container {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 68, 0.2);
+}
+
+body.light-mode .expanded-info-panel {
+  background: #ffffff;
+  color: #0a2e44;
+}
+
+body.light-mode .expanded-title {
+  color: #0a2e44;
+}
+
+body.light-mode .expanded-desc {
+  color: rgba(10, 46, 68, 0.8);
+}
+
+body.light-mode .expanded-meta {
+  color: rgba(10, 46, 68, 0.5);
+}
+
+body.light-mode .expanded-tag {
+  background: rgba(10, 46, 68, 0.05);
+  color: #0a2e44;
+  border: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+@media (max-width: 768px) {
+  .expanded-modal-container {
+    flex-direction: column;
+    max-height: 90vh;
+  }
+  .expanded-image-wrapper {
+    flex: none;
+    height: 50vh;
+  }
+}
+
 

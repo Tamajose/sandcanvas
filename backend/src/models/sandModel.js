@@ -7,6 +7,14 @@ const sandSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      default: "",
+    },
     imagePath: {
       type: String,
       required: true,

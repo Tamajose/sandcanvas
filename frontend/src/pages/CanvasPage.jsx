@@ -3,13 +3,15 @@ import SandCanvas from "../canvas/SandSystem.jsx";
 import { saveCreation } from "../api/creations";
 import Controls from "../components/Controls";
 import ResetModal from "../components/ResetModal";
+import SaveModal from "../components/SaveModal";
 import ThemeToggle from "../components/ThemeToggle";
 
 const CanvasPage = () => {
   const [isLightMode, setIsLightMode] = useState(
     localStorage.getItem("theme") === "light",
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const onResetRef = useRef(null);
 
   useEffect(() => {
@@ -21,17 +23,21 @@ const CanvasPage = () => {
     return () => window.removeEventListener("themeChange", handleThemeChange);
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = async (name, description) => {
     const canvas = document.getElementById("sand-canvas");
     canvas.toBlob(async (blob) => {
       const formData = new FormData();
       formData.append("image", blob, "creation.png");
+      formData.append("name", name);
+      if (description) formData.append("description", description);
+      
       const token = localStorage.getItem("token");
       if (!token) return alert("No token found!");
 
       try {
         await saveCreation(formData);
         alert("Creation Saved!");
+        setIsSaveModalOpen(false);
       } catch (error) {
         alert(error.message || "Error saving");
       }
@@ -43,16 +49,22 @@ const CanvasPage = () => {
       <SandCanvas isLightMode={isLightMode} onResetRef={onResetRef} />
       <Controls
         isLightMode={isLightMode}
-        onOpenModal={() => setIsModalOpen(true)}
-        onSave={handleSave}
+        onOpenModal={() => setIsResetModalOpen(true)}
+        onSave={() => setIsSaveModalOpen(true)}
       />
-      {isModalOpen && (
+      {isResetModalOpen && (
         <ResetModal
           onConfirm={() => {
             onResetRef.current();
-            setIsModalOpen(false);
+            setIsResetModalOpen(false);
           }}
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={() => setIsResetModalOpen(false)}
+        />
+      )}
+      {isSaveModalOpen && (
+        <SaveModal
+          onConfirm={handleSave}
+          onCancel={() => setIsSaveModalOpen(false)}
         />
       )}
     </>

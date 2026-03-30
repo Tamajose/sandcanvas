@@ -11,7 +11,13 @@ export const saveCanvas = async (req, res) => {
       });
     }
 
-    const { isPublic, tags } = req.body;
+    const { isPublic, tags, name, description } = req.body;
+
+    if (!name) {
+      return res.status(400).json({
+        message: "Creation name is required!",
+      });
+    }
     let parsedTags = [];
     if (tags) {
       if (typeof tags === 'string') {
@@ -34,6 +40,8 @@ export const saveCanvas = async (req, res) => {
 
     const sand = await Sand.create({
       userID: req.user._id,
+      name,
+      description,
       imagePath,
       isPublic: isPublicBool,
       tags: parsedTags,
@@ -121,7 +129,7 @@ export const getAllCreations = async (req, res) => {
 
 export const updateCreation = async (req, res) => {
   try {
-    const { isPublic, tags } = req.body;
+    const { isPublic, tags, name, description } = req.body;
     const creation = await Sand.findById(req.params.id);
 
     if(!creation){
@@ -135,6 +143,9 @@ export const updateCreation = async (req, res) => {
         message: "Not authorized"
       });
     }
+
+    if(name !== undefined) creation.name = name;
+    if(description !== undefined) creation.description = description;
 
     if(isPublic !== undefined){
       creation.isPublic = isPublic === 'true' || isPublic === true;

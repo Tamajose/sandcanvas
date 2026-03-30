@@ -117,21 +117,34 @@ const Profile = () => {
     const userId = user?._id; 
     if(!userId) return;
 
-    setPublicCreations((prevCreations) =>
-      prevCreations.map((creation) => {
-        if (creation._id === artId) {
-          const isLiked = creation.likes?.includes(userId);
-          let newLikes = creation.likes ? [...creation.likes] : [];
-          if (isLiked) {
-            newLikes = newLikes.filter((id) => id !== userId);
-          } else {
+    const toggleLikes = (likes) => {
+        const isLiked = likes?.some(id => id.toString() === userId.toString());
+        let newLikes = likes ? [...likes] : [];
+        if (isLiked) {
+            newLikes = newLikes.filter((id) => id.toString() !== userId.toString());
+        } else {
             newLikes.push(userId);
-          }
-          return { ...creation, likes: newLikes };
         }
-        return creation;
-      })
+        return newLikes;
+    };
+
+    // 1. Update public gallery
+    setPublicCreations((prev) =>
+      prev.map((creation) => creation._id.toString() === artId.toString() ? { ...creation, likes: toggleLikes(creation.likes) } : creation)
     );
+
+    // 2. Update personal creations
+    setCreations((prev) =>
+      prev.map((creation) => creation._id.toString() === artId.toString() ? { ...creation, likes: toggleLikes(creation.likes) } : creation)
+    );
+
+    // 3. Update viewing album view (if active)
+    if (viewingAlbum) {
+      setViewingAlbum((prev) => ({
+        ...prev,
+        images: prev.images.map((img) => img._id.toString() === artId.toString() ? { ...img, likes: toggleLikes(img.likes) } : img)
+      }));
+    }
 
     try {
       await toggleLikeCreation(artId);
@@ -140,6 +153,29 @@ const Profile = () => {
       fetchPublicCreations(); 
     }
   };
+
+  // Auto-sync expanded modal if any creation list updates
+  useEffect(() => {
+    if (expandedCreation) {
+      const targetId = expandedCreation._id?.toString();
+      const foundInPublic = publicCreations.find(c => c._id?.toString() === targetId);
+      if (foundInPublic) {
+        setExpandedCreation(foundInPublic);
+        return;
+      }
+      const foundInOwn = creations.find(c => c._id?.toString() === targetId);
+      if (foundInOwn) {
+        setExpandedCreation(foundInOwn);
+        return;
+      }
+      if (viewingAlbum && viewingAlbum.images) {
+        const foundInAlbum = viewingAlbum.images.find(c => c._id?.toString() === targetId);
+        if (foundInAlbum) {
+          setExpandedCreation(foundInAlbum);
+        }
+      }
+    }
+  }, [publicCreations, creations, viewingAlbum]);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -358,8 +394,8 @@ const Profile = () => {
                         >
                           <svg
                             viewBox="0 0 24 24"
-                            fill={art.likes?.includes(user?._id) ? "currentColor" : "none"}
-                            stroke="currentColor"
+                            fill={art.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "none"}
+                            stroke={art.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "currentColor"}
                             strokeWidth="2"
                             style={{ width: "16px", height: "16px" }}
                           >
@@ -833,7 +869,28 @@ const Profile = () => {
             </div>
             
             <div className="expanded-info-panel">
-              <h2 className="expanded-title">{expandedCreation.name || "Untitled Creation"}</h2>
+              <div className="expanded-header">
+                <h2 className="expanded-title">{expandedCreation.name || "Untitled Creation"}</h2>
+                <button
+                  className="modal-like-btn"
+                  onClick={(e) => handleLike(e, expandedCreation._id)}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "none"}
+                    stroke={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "currentColor"}
+                    strokeWidth="2"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                  <span>{expandedCreation.likes?.length || 0}</span>
+                </button>
+              </div>
+
+              <div className="expanded-creator">
+                by {expandedCreation.userID?.name || user?.name || "Unknown Artist"}
+              </div>
+
               {expandedCreation.description && (
                   <p className="expanded-desc">{expandedCreation.description}</p>
               )}

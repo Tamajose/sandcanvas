@@ -888,7 +888,7 @@ body.light-mode .edit-bio-btn {
 }
 
 .expanded-image-wrapper {
-  flex: 2;
+  flex: 3.5;
   background: #000;
   display: flex;
   align-items: center;
@@ -905,28 +905,70 @@ body.light-mode .edit-bio-btn {
 
 .expanded-info-panel {
   flex: 1;
-  padding: 45px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   background: #1a1a1a;
   color: white;
-  min-width: 350px;
+  min-width: 250px;
+  max-width: 350px;
   overflow-y: auto;
 }
 
+.expanded-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .expanded-title {
-  font-size: 28px;
+  font-size: 26px;
   color: #f5deb3;
-  margin-bottom: 25px;
+  margin-bottom: 0;
   font-weight: 700;
   word-wrap: break-word;
   letter-spacing: 1px;
 }
 
-.expanded-desc {
+.expanded-creator {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 25px;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.modal-like-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
+  color: white;
+}
+
+.modal-like-btn:hover {
+  transform: scale(1.1);
+}
+
+.modal-like-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.modal-like-btn span {
   font-size: 16px;
+  font-weight: 600;
+}
+
+.expanded-desc {
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
-  line-height: 1.8;
+  line-height: 1.6;
   margin-bottom: 30px;
   font-family: inherit;
   text-transform: none;
@@ -1496,6 +1538,18 @@ body.light-mode .expanded-desc {
   color: rgba(10, 46, 68, 0.8);
 }
 
+body.light-mode .expanded-creator {
+  color: rgba(10, 46, 68, 0.6);
+}
+
+body.light-mode .modal-like-btn {
+  color: #0a2e44;
+}
+
+body.light-mode .modal-like-btn span {
+  color: #0a2e44;
+}
+
 body.light-mode .expanded-meta {
   color: rgba(10, 46, 68, 0.5);
 }
@@ -1516,5 +1570,3 @@ body.light-mode .expanded-tag {
     height: 50vh;
   }
 }
-
-

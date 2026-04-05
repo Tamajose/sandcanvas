@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../../styles/theme-toggle.css";
 
 const ThemeToggle = ({ style }) => {
   const [isLightMode, setIsLightMode] = useState(

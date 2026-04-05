@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../components/ThemeToggle";
 import "../../styles/index.css";
+import "../../styles/gallery.css";
 
 const Landing = () => {
   const handleCredentialResponse = async (response) => {

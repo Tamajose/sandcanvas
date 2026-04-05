@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import p5 from "p5";
 import GUI from "lil-gui";
+import "../../styles/controls.css";
 
 const WindIcon = () => (
   <svg

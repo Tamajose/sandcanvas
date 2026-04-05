@@ -1,0 +1,91 @@
+/* Gallery Styles */
+.gallery-section {
+  margin-top: 80px;
+  padding: 40px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .gallery-section {
+  border-top: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+.gallery-title {
+  font-size: 24px;
+  margin-bottom: 40px;
+  color: #f5deb3;
+}
+
+body.light-mode .gallery-title {
+  color: #0a2e44;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.gallery-item {
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-5px);
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-image {
+  transform: scale(1.05);
+}
+
+.gallery-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-info {
+  transform: translateY(0);
+}
+
+.gallery-author {
+  color: #f5deb3;
+  font-size: 11px;
+  font-family: "Orbitron";
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+body.light-mode .gallery-author {
+  color: #fff7e0;
+}
+
+.loading-text,
+.no-creations {
+  color: #aaa;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+body.light-mode .loading-text,
+body.light-mode .no-creations {
+  color: #0a2e44;
+}

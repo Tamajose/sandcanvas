@@ -1,0 +1,58 @@
+/* Controls Info Overlay */
+.controls-info {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 60px;
+  z-index: 500;
+  pointer-events: none;
+  user-select: none;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #f5deb3;
+  transition: color 0.4s ease;
+}
+
+body.light-mode .control-item {
+  color: #0a2e44;
+}
+
+.control-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 8px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .control-icon {
+  background: rgba(10, 46, 68, 0.05);
+  border: 1px solid rgba(10, 46, 68, 0.1);
+}
+
+.control-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5px;
+}
+
+.control-label {
+  font-family: "Orbitron";
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}

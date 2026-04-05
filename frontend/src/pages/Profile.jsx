@@ -12,7 +12,7 @@ import {
   removeImageFromAlbum,
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
-import { getAllCreations, toggleLikeCreation } from "../api/creations";
+import { getAllCreations, toggleLikeCreation, updateCreation } from "../api/creations";
 
 // Public creations state for the Home page
 const Profile = () => {
@@ -34,6 +34,9 @@ const Profile = () => {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [newBio, setNewBio] = useState("");
   const [publicCreations, setPublicCreations] = useState([]);
+  const [isEditingCreation, setIsEditingCreation] = useState(false);
+  const [editCreationName, setEditCreationName] = useState("");
+  const [editCreationDesc, setEditCreationDesc] = useState("");
 
   const navigate = useNavigate();
 
@@ -256,6 +259,42 @@ const Profile = () => {
       setIsEditingBio(false);
     } catch (error) {
       alert("Bio update failed");
+    }
+  };
+
+  const handleUpdateCreation = async () => {
+    if (!editCreationName.trim() || !expandedCreation) return;
+    try {
+      const updatedData = await updateCreation(expandedCreation._id, {
+        name: editCreationName,
+        description: editCreationDesc,
+      });
+      const newCreation = updatedData.creation;
+      
+      const applyUpdate = (list) =>
+        list.map((c) =>
+          c._id.toString() === expandedCreation._id.toString()
+            ? { ...c, name: newCreation.name, description: newCreation.description }
+            : c
+        );
+
+      setPublicCreations((prev) => applyUpdate(prev));
+      setCreations((prev) => applyUpdate(prev));
+      if (viewingAlbum && viewingAlbum.images) {
+        setViewingAlbum((prev) => ({
+          ...prev,
+          images: applyUpdate(prev.images),
+        }));
+      }
+
+      setExpandedCreation((prev) => ({
+        ...prev,
+        name: newCreation.name,
+        description: newCreation.description,
+      }));
+      setIsEditingCreation(false);
+    } catch (error) {
+      alert("Failed to update creation");
     }
   };
 
@@ -852,7 +891,10 @@ const Profile = () => {
         <div
           className="modal-backdrop"
           style={{ display: "flex" }}
-          onClick={() => setExpandedCreation(null)}
+          onClick={() => {
+            setExpandedCreation(null);
+            setIsEditingCreation(false);
+          }}
         >
           <span className="close-modal">&times;</span>
           <div className="expanded-modal-container" onClick={(e) => e.stopPropagation()}>
@@ -870,29 +912,73 @@ const Profile = () => {
             
             <div className="expanded-info-panel">
               <div className="expanded-header">
-                <h2 className="expanded-title">{expandedCreation.name || "Untitled Creation"}</h2>
-                <button
-                  className="modal-like-btn"
-                  onClick={(e) => handleLike(e, expandedCreation._id)}
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "none"}
-                    stroke={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "currentColor"}
-                    strokeWidth="2"
+                {isEditingCreation ? (
+                   <input
+                     type="text"
+                     className="album-input"
+                     value={editCreationName}
+                     onChange={(e) => setEditCreationName(e.target.value)}
+                     style={{ fontSize: "20px", marginBottom: "0", maxWidth: "70%" }}
+                     autoFocus
+                   />
+                ) : (
+                   <h2 className="expanded-title">{expandedCreation.name || "Untitled Creation"}</h2>
+                )}
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <button
+                    className="modal-like-btn"
+                    onClick={(e) => handleLike(e, expandedCreation._id)}
                   >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                  </svg>
-                  <span>{expandedCreation.likes?.length || 0}</span>
-                </button>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "none"}
+                      stroke={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "currentColor"}
+                      strokeWidth="2"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    <span>{expandedCreation.likes?.length || 0}</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="expanded-creator">
-                by {expandedCreation.userID?.name || user?.name || "Unknown Artist"}
+              <div className="expanded-creator" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "25px" }}>
+                <span style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "15px", fontWeight: "500" }}>by {expandedCreation.userID?.name || user?.name || "Unknown Artist"}</span>
+                
+                {(expandedCreation.userID?._id === user?._id || expandedCreation.userID === user?._id) && (
+                  isEditingCreation ? (
+                    <div className="edit-actions" style={{ marginLeft: "auto" }}>
+                      <button className="btn-album" onClick={handleUpdateCreation}>Save</button>
+                      <button className="btn-album btn-album-secondary" onClick={() => setIsEditingCreation(false)}>Cancel</button>
+                    </div>
+                  ) : (
+                    <button
+                      className="edit-profile-btn"
+                      style={{ marginLeft: "auto", position: "relative", zIndex: 10 }}
+                      onClick={() => {
+                        setEditCreationName(expandedCreation.name || "");
+                        setEditCreationDesc(expandedCreation.description || "");
+                        setIsEditingCreation(true);
+                      }}
+                    >
+                      Edit 
+                    </button>
+                  )
+                )}
               </div>
 
-              {expandedCreation.description && (
-                  <p className="expanded-desc">{expandedCreation.description}</p>
+              {isEditingCreation ? (
+                 <textarea
+                   className="album-input bio-textarea"
+                   value={editCreationDesc}
+                   onChange={(e) => setEditCreationDesc(e.target.value)}
+                   placeholder="Creation description..."
+                   style={{ marginTop: "0", marginBottom: "30px", width: "100%" }}
+                 />
+              ) : (
+                 expandedCreation.description && (
+                    <p className="expanded-desc">{expandedCreation.description}</p>
+                 )
               )}
               {expandedCreation.tags && expandedCreation.tags.length > 0 && (
                   <div className="expanded-tags">

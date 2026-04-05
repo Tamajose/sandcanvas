@@ -54,3 +54,25 @@ export const toggleLikeCreation = async (id) => {
         throw error;
     }
 };
+
+export const updateCreation = async (id, data) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${API_URL}/api/creations/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to update creation");
+        }
+        return result;
+    } catch (error) {
+        console.error("Update Creation Error:", error);
+        throw error;
+    }
+};

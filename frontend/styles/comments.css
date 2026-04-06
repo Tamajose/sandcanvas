@@ -1,0 +1,223 @@
+.comments-section {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .comments-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.comments-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #f5deb3;
+}
+
+body.light-mode .comments-title {
+  color: #0a2e44;
+}
+
+.comment-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #333;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .comment-avatar {
+  background: #ddd;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.comment-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.comment-input-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 44px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: rgba(245, 222, 179, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.light-mode .comment-input {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+body.light-mode .comment-input:focus {
+  border-color: rgba(10, 46, 68, 0.5);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.comment-submit-btn {
+  align-self: flex-end;
+  background: #f5deb3;
+  color: #1a1a1a;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Orbitron", sans-serif;
+}
+
+.comment-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 222, 179, 0.3);
+}
+
+.comment-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+body.light-mode .comment-submit-btn {
+  background: #0a2e44;
+  color: #f5deb3;
+}
+
+body.light-mode .comment-submit-btn:hover {
+  box-shadow: 0 4px 12px rgba(10, 46, 68, 0.3);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+  animation: fadeUp 0.3s ease-out forwards;
+}
+
+.comment-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+body.light-mode .comment-author {
+  color: #000;
+}
+
+.comment-date {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-mode .comment-date {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.comment-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+body.light-mode .comment-text {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.comment-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.comment-action-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.comment-action-btn:hover {
+  color: #f5deb3;
+}
+
+body.light-mode .comment-action-btn {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-mode .comment-action-btn:hover {
+  color: #0a2e44;
+}
+
+.comment-action-btn.delete:hover {
+  color: #ff4b4b;
+}
+
+.no-comments {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+body.light-mode .no-comments {
+  color: rgba(0, 0, 0, 0.4);
+}

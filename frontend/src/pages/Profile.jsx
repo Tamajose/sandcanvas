@@ -12,7 +12,7 @@ import {
   removeImageFromAlbum,
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
-import { getAllCreations, toggleLikeCreation, updateCreation } from "../api/creations";
+import { getAllCreations, toggleLikeCreation, updateCreation, toggleCreationPrivacy } from "../api/creations";
 import Comments from "../components/Comments";
 
 // Public creations state for the Home page
@@ -155,6 +155,53 @@ const Profile = () => {
     } catch (error) {
       console.error("Failed to toggle like:", error);
       fetchPublicCreations(); 
+    }
+  };
+
+  const handleTogglePrivacy = async (e, artId) => {
+    e.stopPropagation();
+    try {
+      const { isPublic } = await toggleCreationPrivacy(artId);
+      
+      const applyUpdate = (list) =>
+        list.map((c) =>
+          c._id.toString() === artId.toString()
+            ? { ...c, isPublic: isPublic }
+            : c
+        );
+
+      setPublicCreations((prev) => {
+        if (isPublic) {
+          const exists = prev.find(c => c._id.toString() === artId.toString());
+          if (exists) {
+            return prev.map(c => c._id.toString() === artId.toString() ? { ...c, isPublic } : c);
+          } else if (expandedCreation) {
+             return [{...expandedCreation, isPublic}, ...prev];
+          }
+          return prev;
+        } else {
+          return prev.filter(c => c._id.toString() !== artId.toString());
+        }
+      });
+
+      setCreations((prev) => applyUpdate(prev));
+      if (viewingAlbum && viewingAlbum.images) {
+        setViewingAlbum((prev) => ({
+          ...prev,
+          images: applyUpdate(prev.images),
+        }));
+      }
+
+      if (expandedCreation && expandedCreation._id.toString() === artId.toString()) {
+        setExpandedCreation((prev) => ({
+          ...prev,
+          isPublic: isPublic,
+        }));
+      }
+      
+      fetchPublicCreations(); 
+    } catch (error) {
+      console.error("Failed to toggle privacy:", error);
     }
   };
 
@@ -953,17 +1000,24 @@ const Profile = () => {
                       <button className="btn-album btn-album-secondary" onClick={() => setIsEditingCreation(false)}>Cancel</button>
                     </div>
                   ) : (
-                    <button
-                      className="edit-profile-btn"
-                      style={{ marginLeft: "auto", position: "relative", zIndex: 10 }}
-                      onClick={() => {
-                        setEditCreationName(expandedCreation.name || "");
-                        setEditCreationDesc(expandedCreation.description || "");
-                        setIsEditingCreation(true);
-                      }}
-                    >
-                      Edit 
-                    </button>
+                    <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center", position: "relative", zIndex: 10 }}>
+                      <button
+                        className="btn-album btn-album-secondary"
+                        onClick={(e) => handleTogglePrivacy(e, expandedCreation._id)}
+                      >
+                        {expandedCreation.isPublic !== false ? "Make Private" : "Make Public"}
+                      </button>
+                      <button
+                        className="edit-profile-btn"
+                        onClick={() => {
+                          setEditCreationName(expandedCreation.name || "");
+                          setEditCreationDesc(expandedCreation.description || "");
+                          setIsEditingCreation(true);
+                        }}
+                      >
+                        Edit 
+                      </button>
+                    </div>
                   )
                 )}
               </div>

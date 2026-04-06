@@ -3,13 +3,14 @@ import React, { useState } from "react";
 const SaveModal = ({ onConfirm, onCancel }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
 
   const handleSave = () => {
     if (!name.trim()) {
       alert("Creation Name is mandatory!");
       return;
     }
-    onConfirm(name, description);
+    onConfirm(name, description, isPublic);
   };
 
   return (
@@ -41,7 +42,19 @@ const SaveModal = ({ onConfirm, onCancel }) => {
             rows="3"
           />
         </div>
-        <div className="modal-actions">
+        <div className="modal-form-group" style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "15px" }}>
+          <input
+            type="checkbox"
+            id="isPublic"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            style={{ width: "18px", height: "18px", cursor: "pointer" }}
+          />
+          <label htmlFor="isPublic" style={{ cursor: "pointer", margin: 0, fontSize: "14px" }}>
+            Make Creation Public
+          </label>
+        </div>
+        <div className="modal-actions" style={{ marginTop: "20px" }}>
           <button onClick={handleSave} className="btn-primary">
             Save
           </button>

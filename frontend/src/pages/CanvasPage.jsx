@@ -23,13 +23,14 @@ const CanvasPage = () => {
     return () => window.removeEventListener("themeChange", handleThemeChange);
   }, []);
 
-  const handleSave = async (name, description) => {
+  const handleSave = async (name, description, isPublic) => {
     const canvas = document.getElementById("sand-canvas");
     canvas.toBlob(async (blob) => {
       const formData = new FormData();
       formData.append("image", blob, "creation.png");
       formData.append("name", name);
       if (description) formData.append("description", description);
+      formData.append("isPublic", isPublic);
       
       const token = localStorage.getItem("token");
       if (!token) return alert("No token found!");

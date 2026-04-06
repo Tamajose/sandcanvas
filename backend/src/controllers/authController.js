@@ -5,7 +5,6 @@ import { OAuth2Client } from "google-auth-library";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// user registration
 export const registerUser = async (req, res) => {
   try {
     const { email, password, name } = req.body;
@@ -49,7 +48,6 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// user login
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -119,7 +117,8 @@ export const googleLogin = async (req, res) => {
       if (!user.name) user.name = name;
       if (!user.profileImage?.url) {
         user.profileImage = {
-          url: picture, publicId: ""
+          url: picture,
+          publicId: "",
         };
       }
       await user.save();

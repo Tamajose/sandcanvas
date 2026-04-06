@@ -20,20 +20,20 @@ export const saveCanvas = async (req, res) => {
     }
     let parsedTags = [];
     if (tags) {
-      if (typeof tags === 'string') {
+      if (typeof tags === "string") {
         try {
           parsedTags = JSON.parse(tags);
-        } catch(e) {
-          parsedTags = tags.split(',').map(t => t.trim());
+        } catch (e) {
+          parsedTags = tags.split(",").map((t) => t.trim());
         }
       } else if (Array.isArray(tags)) {
         parsedTags = tags;
       }
     }
-    
+
     let isPublicBool = true;
     if (isPublic !== undefined) {
-      isPublicBool = isPublic === 'true' || isPublic === true;
+      isPublicBool = isPublic === "true" || isPublic === true;
     }
 
     const imagePath = req.file.path; // Cloudinary URL
@@ -83,16 +83,14 @@ export const deleteCreation = async (req, res) => {
       return res.status(404).json({ message: "Creation not found" });
     }
 
-    // Check ownership
     if (creation.userID.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: "Not authorized" });
     }
 
-    // Delete file
-    if (creation.imagePath && creation.imagePath.includes('cloudinary.com')) {
-      const parts = creation.imagePath.split('/');
+    if (creation.imagePath && creation.imagePath.includes("cloudinary.com")) {
+      const parts = creation.imagePath.split("/");
       const filename = parts.pop();
-      const publicId = "sandcanvas_creations/" + filename.split('.')[0];
+      const publicId = "sandcanvas_creations/" + filename.split(".")[0];
       await cloudinary.uploader.destroy(publicId);
       console.log(`Cloudinary Deletion Success: Removed canvas ${publicId}`);
     } else {
@@ -132,32 +130,32 @@ export const updateCreation = async (req, res) => {
     const { isPublic, tags, name, description } = req.body;
     const creation = await Sand.findById(req.params.id);
 
-    if(!creation){
+    if (!creation) {
       return res.status(404).json({
-        message: "Creation not found"
+        message: "Creation not found",
       });
     }
 
-    if(creation.userID.toString() !== req.user._id.toString()){
+    if (creation.userID.toString() !== req.user._id.toString()) {
       return res.status(401).json({
-        message: "Not authorized"
+        message: "Not authorized",
       });
     }
 
-    if(name !== undefined) creation.name = name;
-    if(description !== undefined) creation.description = description;
+    if (name !== undefined) creation.name = name;
+    if (description !== undefined) creation.description = description;
 
-    if(isPublic !== undefined){
-      creation.isPublic = isPublic === 'true' || isPublic === true;
+    if (isPublic !== undefined) {
+      creation.isPublic = isPublic === "true" || isPublic === true;
     }
-    
-    if(tags !== undefined){
+
+    if (tags !== undefined) {
       let parsedTags = tags;
-      if(typeof tags === 'string'){
-        try{
+      if (typeof tags === "string") {
+        try {
           parsedTags = JSON.parse(tags);
-        } catch(e){
-          parsedTags = tags.split(',').map(t => t.trim());
+        } catch (e) {
+          parsedTags = tags.split(",").map((t) => t.trim());
         }
       }
       creation.tags = parsedTags;
@@ -165,10 +163,10 @@ export const updateCreation = async (req, res) => {
 
     await creation.save();
     res.status(200).json({ message: "Creation updated", creation });
-  } catch (error){
+  } catch (error) {
     console.error("Update Creation Error: ", error);
     res.status(500).json({
-      message: "Server Error"
+      message: "Server Error",
     });
   }
 };
@@ -184,21 +182,47 @@ export const toggleLikeCreation = async (req, res) => {
     const isLiked = creation.likes.includes(userId);
 
     if (isLiked) {
-      // Unlike
-      creation.likes = creation.likes.filter(id => id.toString() !== userId.toString());
+      creation.likes = creation.likes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
     } else {
-      // Like
       creation.likes.push(userId);
     }
 
     await creation.save();
-    
-    res.status(200).json({ 
+
+    res.status(200).json({
       message: isLiked ? "Unliked successfully" : "Liked successfully",
-      likes: creation.likes 
+      likes: creation.likes,
     });
   } catch (error) {
     console.error("Toggle Like Error: ", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const toggleCreationPrivacy = async (req, res) => {
+  try {
+    const creation = await Sand.findById(req.params.id);
+    if (!creation) {
+      return res.status(404).json({ message: "Creation not found" });
+    }
+
+    if (creation.userID.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    creation.isPublic =
+      creation.isPublic === undefined ? false : !creation.isPublic;
+
+    await creation.save();
+
+    res.status(200).json({
+      message: `Creation is now ${creation.isPublic ? "public" : "private"}`,
+      isPublic: creation.isPublic,
+    });
+  } catch (error) {
+    console.error("Toggle Privacy Error: ", error);
     res.status(500).json({ message: "Server Error" });
   }
 };

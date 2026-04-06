@@ -107,9 +107,7 @@ const Comments = ({ creationId, currentUser }) => {
         <div className="comment-input-wrapper">
           <textarea
             className="comment-input"
-            placeholder={
-              currentUser ? "Add a comment..." : "Sign in to comment"
-            }
+            placeholder={currentUser ? "Add a comment" : "Sign in to comment"}
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
             disabled={!currentUser}

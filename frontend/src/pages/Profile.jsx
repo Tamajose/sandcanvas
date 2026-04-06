@@ -12,7 +12,12 @@ import {
   removeImageFromAlbum,
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
-import { getAllCreations, toggleLikeCreation, updateCreation, toggleCreationPrivacy } from "../api/creations";
+import {
+  getAllCreations,
+  toggleLikeCreation,
+  updateCreation,
+  toggleCreationPrivacy,
+} from "../api/creations";
 import Comments from "../components/Comments";
 
 // Public creations state for the Home page
@@ -117,36 +122,48 @@ const Profile = () => {
 
   const handleLike = async (e, artId) => {
     e.stopPropagation();
-    
-    const userId = user?._id; 
-    if(!userId) return;
+
+    const userId = user?._id;
+    if (!userId) return;
 
     const toggleLikes = (likes) => {
-        const isLiked = likes?.some(id => id.toString() === userId.toString());
-        let newLikes = likes ? [...likes] : [];
-        if (isLiked) {
-            newLikes = newLikes.filter((id) => id.toString() !== userId.toString());
-        } else {
-            newLikes.push(userId);
-        }
-        return newLikes;
+      const isLiked = likes?.some((id) => id.toString() === userId.toString());
+      let newLikes = likes ? [...likes] : [];
+      if (isLiked) {
+        newLikes = newLikes.filter((id) => id.toString() !== userId.toString());
+      } else {
+        newLikes.push(userId);
+      }
+      return newLikes;
     };
 
     // 1. Update public gallery
     setPublicCreations((prev) =>
-      prev.map((creation) => creation._id.toString() === artId.toString() ? { ...creation, likes: toggleLikes(creation.likes) } : creation)
+      prev.map((creation) =>
+        creation._id.toString() === artId.toString()
+          ? { ...creation, likes: toggleLikes(creation.likes) }
+          : creation,
+      ),
     );
 
     // 2. Update personal creations
     setCreations((prev) =>
-      prev.map((creation) => creation._id.toString() === artId.toString() ? { ...creation, likes: toggleLikes(creation.likes) } : creation)
+      prev.map((creation) =>
+        creation._id.toString() === artId.toString()
+          ? { ...creation, likes: toggleLikes(creation.likes) }
+          : creation,
+      ),
     );
 
     // 3. Update viewing album view (if active)
     if (viewingAlbum) {
       setViewingAlbum((prev) => ({
         ...prev,
-        images: prev.images.map((img) => img._id.toString() === artId.toString() ? { ...img, likes: toggleLikes(img.likes) } : img)
+        images: prev.images.map((img) =>
+          img._id.toString() === artId.toString()
+            ? { ...img, likes: toggleLikes(img.likes) }
+            : img,
+        ),
       }));
     }
 
@@ -154,7 +171,7 @@ const Profile = () => {
       await toggleLikeCreation(artId);
     } catch (error) {
       console.error("Failed to toggle like:", error);
-      fetchPublicCreations(); 
+      fetchPublicCreations();
     }
   };
 
@@ -162,25 +179,29 @@ const Profile = () => {
     e.stopPropagation();
     try {
       const { isPublic } = await toggleCreationPrivacy(artId);
-      
+
       const applyUpdate = (list) =>
         list.map((c) =>
           c._id.toString() === artId.toString()
             ? { ...c, isPublic: isPublic }
-            : c
+            : c,
         );
 
       setPublicCreations((prev) => {
         if (isPublic) {
-          const exists = prev.find(c => c._id.toString() === artId.toString());
+          const exists = prev.find(
+            (c) => c._id.toString() === artId.toString(),
+          );
           if (exists) {
-            return prev.map(c => c._id.toString() === artId.toString() ? { ...c, isPublic } : c);
+            return prev.map((c) =>
+              c._id.toString() === artId.toString() ? { ...c, isPublic } : c,
+            );
           } else if (expandedCreation) {
-             return [{...expandedCreation, isPublic}, ...prev];
+            return [{ ...expandedCreation, isPublic }, ...prev];
           }
           return prev;
         } else {
-          return prev.filter(c => c._id.toString() !== artId.toString());
+          return prev.filter((c) => c._id.toString() !== artId.toString());
         }
       });
 
@@ -192,14 +213,17 @@ const Profile = () => {
         }));
       }
 
-      if (expandedCreation && expandedCreation._id.toString() === artId.toString()) {
+      if (
+        expandedCreation &&
+        expandedCreation._id.toString() === artId.toString()
+      ) {
         setExpandedCreation((prev) => ({
           ...prev,
           isPublic: isPublic,
         }));
       }
-      
-      fetchPublicCreations(); 
+
+      fetchPublicCreations();
     } catch (error) {
       console.error("Failed to toggle privacy:", error);
     }
@@ -209,18 +233,22 @@ const Profile = () => {
   useEffect(() => {
     if (expandedCreation) {
       const targetId = expandedCreation._id?.toString();
-      const foundInPublic = publicCreations.find(c => c._id?.toString() === targetId);
+      const foundInPublic = publicCreations.find(
+        (c) => c._id?.toString() === targetId,
+      );
       if (foundInPublic) {
         setExpandedCreation(foundInPublic);
         return;
       }
-      const foundInOwn = creations.find(c => c._id?.toString() === targetId);
+      const foundInOwn = creations.find((c) => c._id?.toString() === targetId);
       if (foundInOwn) {
         setExpandedCreation(foundInOwn);
         return;
       }
       if (viewingAlbum && viewingAlbum.images) {
-        const foundInAlbum = viewingAlbum.images.find(c => c._id?.toString() === targetId);
+        const foundInAlbum = viewingAlbum.images.find(
+          (c) => c._id?.toString() === targetId,
+        );
         if (foundInAlbum) {
           setExpandedCreation(foundInAlbum);
         }
@@ -318,12 +346,16 @@ const Profile = () => {
         description: editCreationDesc,
       });
       const newCreation = updatedData.creation;
-      
+
       const applyUpdate = (list) =>
         list.map((c) =>
           c._id.toString() === expandedCreation._id.toString()
-            ? { ...c, name: newCreation.name, description: newCreation.description }
-            : c
+            ? {
+                ...c,
+                name: newCreation.name,
+                description: newCreation.description,
+              }
+            : c,
         );
 
       setPublicCreations((prev) => applyUpdate(prev));
@@ -424,387 +456,39 @@ const Profile = () => {
 
         <main className="main-content">
           {activeSection === "home" && (
-            <section id="home-section" className="content-section">
-              <div className="hero-section">
-                <h2 className="hero-title">
-                  Explore Sand Creations by Other Users
-                </h2>
-              </div>
-              <div id="home-grid" className="art-grid">
-                {publicCreations
-                  .filter((art) => (art.userID?._id || art.userID) !== user?._id)
-                  .map((art) => (
-                  <div
-                    key={art._id}
-                    className="art-item"
-                    onClick={() => setExpandedCreation(art)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="art-thumbnail-wrapper">
-                      <img
-                        src={
-                          art.imagePath?.startsWith("http")
-                            ? art.imagePath
-                            : `${API_URL}${art.imagePath}`
-                        }
-                        alt="Sandscape"
-                      />
-                    </div>
-                    <div className="art-info">
-                      <div className="art-creator">
-                        {art.userID?.name || art.creator || "Unknown"}
-                      </div>
-                      <div className="art-stats" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                        <span
-                          style={{
-                            fontSize: "12px",
-                            color: "rgba(255, 255, 255, 0.5)",
-                          }}
-                        >
-                          {new Date(art.createdAt).toLocaleDateString("en-GB")}
-                        </span>
-                        
-                        <button
-                          className="btn-like"
-                          onClick={(e) => handleLike(e, art._id)}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            color: art.likes?.includes(user?._id) ? "#ff4b4b" : "rgba(255, 255, 255, 0.5)",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            fontSize: "14px",
-                            padding: 0
-                          }}
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill={art.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "none"}
-                            stroke={art.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "currentColor"}
-                            strokeWidth="2"
-                            style={{ width: "16px", height: "16px" }}
-                          >
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                          </svg>
-                          <span>{art.likes?.length || 0}</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <Gallery 
+              publicCreations={publicCreations} 
+              user={user} 
+              setExpandedCreation={setExpandedCreation} 
+              handleLike={handleLike} 
+            />
           )}
 
           {activeSection === "creations" && (
-            <section id="creations-section" className="content-section">
-              {creations.length === 0 ? (
-                <div className="empty-state">
-                  <svg
-                    className="empty-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <line x1="3" y1="9" x2="21" y2="9" />
-                    <line x1="9" y1="21" x2="9" y2="9" />
-                  </svg>
-                  <p className="empty-message">No creations yet</p>
-                  <p className="empty-subtitle">
-                    Start by creating something in the canvas!
-                  </p>
-                </div>
-              ) : (
-                <div className="creations-grid">
-                  {creations.map((creation) => (
-                    <div
-                      key={creation._id}
-                      className="creation-item"
-                      onClick={() => setExpandedCreation(creation)}
-                    >
-                      <img
-                        src={creation.imagePath?.startsWith("http") ? creation.imagePath : `${API_URL}${creation.imagePath}`}
-                        alt="Sand Creation"
-                      />
-                      <button
-                        className="delete-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteCreation(creation._id);
-                        }}
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
+            <Creations 
+              creations={creations} 
+              setExpandedCreation={setExpandedCreation} 
+            />
           )}
 
           {activeSection === "albums" && (
-            <section className="content-section">
-              {!viewingAlbum ? (
-                <>
-                  <div className="section-header">
-                    <h2 className="section-title">Your Albums</h2>
-                    <button
-                      className="add-album-btn"
-                      onClick={() => setIsCreateModalOpen(true)}
-                      title="Create New Album"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      >
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {albums.length === 0 ? (
-                    <div className="empty-state">
-                      <svg
-                        className="empty-icon"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                      >
-                        <rect x="3" y="4" width="18" height="16" rx="2" />
-                        <path d="M3 10h18" />
-                      </svg>
-                      <p className="empty-message">No albums yet</p>
-                      <p className="empty-subtitle">
-                        Organize your creations into themed collections.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="albums-grid">
-                      {albums.map((album) => (
-                        <div
-                          key={album._id}
-                          className="album-card"
-                          onClick={() => setViewingAlbum(album)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <div className="album-header">
-                            {editingAlbumId === album._id ? (
-                              <div
-                                className="album-input-group"
-                                style={{
-                                  marginBottom: 0,
-                                  width: "100%",
-                                  zIndex: 10,
-                                }}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <input
-                                  type="text"
-                                  className="album-input"
-                                  value={newAlbumNameEdit}
-                                  onChange={(e) =>
-                                    setNewAlbumNameEdit(e.target.value)
-                                  }
-                                  autoFocus
-                                />
-                                <button
-                                  className="btn-album"
-                                  onClick={() => handleRenameAlbum(album._id)}
-                                >
-                                  Save
-                                </button>
-                                <button
-                                  className="btn-album btn-album-secondary"
-                                  onClick={() => setEditingAlbumId(null)}
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                            ) : (
-                              <>
-                                <div>
-                                  <h3 className="album-title">{album.name}</h3>
-                                  <span className="album-count">
-                                    {album.images.length} images
-                                  </span>
-                                </div>
-                                <div className="album-actions">
-                                  <button
-                                    className="btn-album btn-album-secondary"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setEditingAlbumId(album._id);
-                                      setNewAlbumNameEdit(album.name);
-                                    }}
-                                    style={{
-                                      padding: "6px 12px",
-                                      fontSize: "10px",
-                                      minWidth: "auto",
-                                    }}
-                                  >
-                                    Rename
-                                  </button>
-                                  <button
-                                    className="btn-album btn-album-danger"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      deleteAlbum(album._id).then(fetchAlbums);
-                                    }}
-                                    style={{
-                                      padding: "6px 12px",
-                                      fontSize: "10px",
-                                      minWidth: "auto",
-                                    }}
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-
-                          <div className="album-images">
-                            {album.images.slice(0, 4).map((img) => (
-                              <div key={img._id} className="album-image-item">
-                                <img
-                                  src={img.imagePath?.startsWith("http") ? img.imagePath : `${API_URL}${img.imagePath}`}
-                                  alt="album preview"
-                                />
-                              </div>
-                            ))}
-                            {[
-                              ...Array(Math.max(0, 4 - album.images.length)),
-                            ].map((_, i) => (
-                              <div
-                                key={`empty-${i}`}
-                                className="album-image-item"
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  opacity: 0.3,
-                                }}
-                              >
-                                <svg
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1"
-                                >
-                                  <rect
-                                    x="3"
-                                    y="3"
-                                    width="18"
-                                    height="18"
-                                    rx="2"
-                                  />
-                                  <circle cx="8.5" cy="8.5" r="1.5" />
-                                  <path d="M21 15l-5-5L5 21" />
-                                </svg>
-                              </div>
-                            ))}
-                          </div>
-
-                          <button
-                            className="btn-album"
-                            style={{ width: "100%", marginTop: "10px" }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setViewingAlbum(album);
-                            }}
-                          >
-                            Explore Album
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="album-detail-view">
-                  <header className="album-detail-header">
-                    <button
-                      className="album-back-btn"
-                      onClick={() => setViewingAlbum(null)}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
-                      </svg>
-                      <span>Back to Albums</span>
-                    </button>
-                    <h2 className="album-detail-title">{viewingAlbum.name}</h2>
-                    <button
-                      className="btn-album"
-                      onClick={() => {
-                        setSelectedAlbumId(viewingAlbum._id);
-                        setIsAddModalOpen(true);
-                      }}
-                    >
-                      Add Creations
-                    </button>
-                  </header>
-
-                  {viewingAlbum.images.length === 0 ? (
-                    <div className="empty-state">
-                      <p className="empty-message">This album is empty</p>
-                      <button
-                        className="btn-album"
-                        onClick={() => {
-                          setSelectedAlbumId(viewingAlbum._id);
-                          setIsAddModalOpen(true);
-                        }}
-                      >
-                        Add your first creation
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="creations-grid">
-                      {viewingAlbum.images.map((img) => (
-                        <div
-                          key={img._id}
-                          className="creation-item"
-                          onClick={() => setExpandedCreation(img)}
-                        >
-                          <img
-                            src={img.imagePath?.startsWith("http") ? img.imagePath : `${API_URL}${img.imagePath}`}
-                            alt="Sand Creation"
-                          />
-                          <button
-                            className="delete-btn"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleRemoveImage(viewingAlbum._id, img._id);
-                            }}
-                            title="Remove from album"
-                          >
-                            &times;
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </section>
+            <Albums 
+              albums={albums}
+              viewingAlbum={viewingAlbum}
+              setViewingAlbum={setViewingAlbum}
+              editingAlbumId={editingAlbumId}
+              setEditingAlbumId={setEditingAlbumId}
+              newAlbumNameEdit={newAlbumNameEdit}
+              setNewAlbumNameEdit={setNewAlbumNameEdit}
+              setIsCreateModalOpen={setIsCreateModalOpen}
+              handleRenameAlbum={handleRenameAlbum}
+              fetchAlbums={fetchAlbums}
+              setSelectedAlbumId={setSelectedAlbumId}
+              setIsAddModalOpen={setIsAddModalOpen}
+              setExpandedCreation={setExpandedCreation}
+              handleRemoveImage={handleRemoveImage}
+            />
           )}
-
           {activeSection === "profile" && user && (
             <section id="profile-section" className="content-section">
               <div className="profile-container">
@@ -935,127 +619,21 @@ const Profile = () => {
         </main>
       </div>
 
-      {expandedCreation && (
-        <div
-          className="modal-backdrop"
-          style={{ display: "flex" }}
-          onClick={() => {
-            setExpandedCreation(null);
-            setIsEditingCreation(false);
-          }}
-        >
-          <span className="close-modal">&times;</span>
-          <div className="expanded-modal-container" onClick={(e) => e.stopPropagation()}>
-            <div className="expanded-image-wrapper">
-              <img
-                className="expanded-img"
-                src={
-                  expandedCreation.imagePath?.startsWith("http")
-                    ? expandedCreation.imagePath
-                    : `${API_URL}${expandedCreation.imagePath}`
-                }
-                alt="Expanded"
-              />
-            </div>
-            
-            <div className="expanded-info-panel">
-              <div className="expanded-header">
-                {isEditingCreation ? (
-                   <input
-                     type="text"
-                     className="album-input"
-                     value={editCreationName}
-                     onChange={(e) => setEditCreationName(e.target.value)}
-                     style={{ fontSize: "20px", marginBottom: "0", maxWidth: "70%" }}
-                     autoFocus
-                   />
-                ) : (
-                   <h2 className="expanded-title">{expandedCreation.name || "Untitled Creation"}</h2>
-                )}
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                  <button
-                    className="modal-like-btn"
-                    onClick={(e) => handleLike(e, expandedCreation._id)}
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "none"}
-                      stroke={expandedCreation.likes?.some(id => id.toString() === user?._id?.toString()) ? "#ff4b4b" : "currentColor"}
-                      strokeWidth="2"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                    </svg>
-                    <span>{expandedCreation.likes?.length || 0}</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="expanded-creator" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "25px" }}>
-                <span style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "15px", fontWeight: "500" }}>by {expandedCreation.userID?.name || user?.name || "Unknown Artist"}</span>
-                
-                {(expandedCreation.userID?._id === user?._id || expandedCreation.userID === user?._id) && (
-                  isEditingCreation ? (
-                    <div className="edit-actions" style={{ marginLeft: "auto" }}>
-                      <button className="btn-album" onClick={handleUpdateCreation}>Save</button>
-                      <button className="btn-album btn-album-secondary" onClick={() => setIsEditingCreation(false)}>Cancel</button>
-                    </div>
-                  ) : (
-                    <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center", position: "relative", zIndex: 10 }}>
-                      <button
-                        className="btn-album btn-album-secondary"
-                        onClick={(e) => handleTogglePrivacy(e, expandedCreation._id)}
-                      >
-                        {expandedCreation.isPublic !== false ? "Make Private" : "Make Public"}
-                      </button>
-                      <button
-                        className="edit-profile-btn"
-                        onClick={() => {
-                          setEditCreationName(expandedCreation.name || "");
-                          setEditCreationDesc(expandedCreation.description || "");
-                          setIsEditingCreation(true);
-                        }}
-                      >
-                        Edit 
-                      </button>
-                    </div>
-                  )
-                )}
-              </div>
-
-              {isEditingCreation ? (
-                 <textarea
-                   className="album-input bio-textarea"
-                   value={editCreationDesc}
-                   onChange={(e) => setEditCreationDesc(e.target.value)}
-                   placeholder="Creation description..."
-                   style={{ marginTop: "0", marginBottom: "30px", width: "100%" }}
-                 />
-              ) : (
-                 expandedCreation.description && (
-                    <p className="expanded-desc">{expandedCreation.description}</p>
-                 )
-              )}
-              {expandedCreation.tags && expandedCreation.tags.length > 0 && (
-                  <div className="expanded-tags">
-                      {expandedCreation.tags.map((tag, idx) => (
-                          <span key={idx} className="expanded-tag">
-                              #{tag}
-                          </span>
-                      ))}
-                  </div>
-              )}
-              <div className="expanded-meta">
-                {expandedCreation.createdAt && (
-                  <span>Created: {new Date(expandedCreation.createdAt).toLocaleDateString("en-GB")}</span>
-                )}
-              </div>
-              
-              <Comments creationId={expandedCreation._id} currentUser={user} />
-            </div>
-          </div>
-        </div>
-      )}
-
+      <CreationModal
+        expandedCreation={expandedCreation}
+        setExpandedCreation={setExpandedCreation}
+        isEditingCreation={isEditingCreation}
+        setIsEditingCreation={setIsEditingCreation}
+        editCreationName={editCreationName}
+        setEditCreationName={setEditCreationName}
+        editCreationDesc={editCreationDesc}
+        setEditCreationDesc={setEditCreationDesc}
+        user={user}
+        handleLike={handleLike}
+        handleTogglePrivacy={handleTogglePrivacy}
+        handleDeleteCreation={handleDeleteCreation}
+        handleUpdateCreation={handleUpdateCreation}
+      />
       {isPicModalOpen && (
         <div
           className="modal-backdrop"
@@ -1151,7 +729,11 @@ const Profile = () => {
                 {creations.map((c) => (
                   <img
                     key={c._id}
-                    src={`${API_URL}${c.imagePath}`}
+                    src={
+                      c.imagePath?.startsWith("http")
+                        ? c.imagePath
+                        : `${API_URL}${c.imagePath}`
+                    }
                     alt="creation"
                     onClick={async () => {
                       await handleAddImage(selectedAlbumId, c._id);
@@ -1195,3 +777,7 @@ const Profile = () => {
 };
 
 export default Profile;
+import Gallery from "../components/Gallery";
+import Creations from "../components/Creations";
+import Albums from "../components/Albums";
+import CreationModal from "../components/CreationModal";

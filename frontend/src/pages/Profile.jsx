@@ -13,6 +13,7 @@ import {
 } from "../api/album";
 import { updateUserProfile } from "../api/auth";
 import { getAllCreations, toggleLikeCreation, updateCreation } from "../api/creations";
+import Comments from "../components/Comments";
 
 // Public creations state for the Home page
 const Profile = () => {
@@ -994,6 +995,8 @@ const Profile = () => {
                   <span>Created: {new Date(expandedCreation.createdAt).toLocaleDateString("en-GB")}</span>
                 )}
               </div>
+              
+              <Comments creationId={expandedCreation._id} currentUser={user} />
             </div>
           </div>
         </div>

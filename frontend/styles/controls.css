@@ -5,7 +5,8 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 60px;
+  align-items: center;
+  gap: 25px;
   z-index: 500;
   pointer-events: none;
   user-select: none;
@@ -17,11 +18,37 @@
   align-items: center;
   gap: 10px;
   color: #f5deb3;
-  transition: color 0.4s ease;
+  transition: all 0.3s ease;
+}
+
+.control-item.active {
+  color: #ffffff;
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.control-item.active .control-icon {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.control-item.inactive {
+  opacity: 0.25;
+  filter: blur(0.5px) grayscale(0.5);
 }
 
 body.light-mode .control-item {
+  color: #94a3b8;
+}
+
+body.light-mode .control-item.active {
   color: #0a2e44;
+  filter: drop-shadow(0 0 10px rgba(10, 46, 68, 0.15));
+}
+
+body.light-mode .control-item.active .control-icon {
+  background: rgba(10, 46, 68, 0.12);
+  border-color: rgba(10, 46, 68, 0.25);
 }
 
 .control-icon {
@@ -50,9 +77,20 @@ body.light-mode .control-icon {
 
 .control-label {
   font-family: "Orbitron";
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 1px;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 0.7;
+}
+
+.control-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 5px;
+}
+
+body.light-mode .control-divider {
+  background: rgba(10, 46, 68, 0.1);
 }

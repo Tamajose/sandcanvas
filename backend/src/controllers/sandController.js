@@ -36,7 +36,7 @@ export const saveCanvas = async (req, res) => {
       isPublicBool = isPublic === "true" || isPublic === true;
     }
 
-    const imagePath = req.file.path; // Cloudinary URL
+    const imagePath = req.file.path;
 
     const sand = await Sand.create({
       userID: req.user._id,
